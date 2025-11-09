@@ -8,10 +8,14 @@
 	
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<class>Entity.Users</class>
+		<class>Entity.Favorite</class>
+		<class>Entity.Share</class>
+		<class>Entity.Video</class>
+		
 		
 		<properties>
 			<property name = "javax.persistence.jdbc.driver" value = "com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-			<property name = "javax.persistence.jdbc.url" value = "jdbc:sqlserver://localhost:143	3;databaseName=PolyOE;encrypt=false"/>
+			<property name = "javax.persistence.jdbc.url" value = "jdbc:sqlserver://localhost:1433;databaseName=PolyOE;encrypt=false"/>
 			<property name = "javax.persistence.jdbc.user" value = "sa"/>
 			<property name = "javax.persistence.jdbc.password" value = "123"/>
 
