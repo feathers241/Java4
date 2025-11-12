@@ -5,10 +5,7 @@ import java.util.List;
 import Dao.VideoDao;
 import Entity.Share;
 import Entity.Video;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 public class VideoDaoImpl implements VideoDao{
 	
@@ -62,6 +59,24 @@ public class VideoDaoImpl implements VideoDao{
 		}catch(Exception e) {
 			em.getTransaction().rollback();
 		}
+	}
+
+
+	@Override
+	public List<Video> notlike() {
+		String sql = "select v from Video v where v.id not in (select f.video.id from Favorite f )";
+		TypedQuery<Video> query = em.createQuery(sql,Video.class);
+		List<Video> list = query.getResultList();
+		return list;
+	}
+
+
+	@Override
+	public List<Object[]> sharein2024() {
+		String sql = "select s.video.id , s.shareDate from Share s where year(s.shareDate) = 2024 order by s.shareDate asc";
+		TypedQuery<Object[]> query = em.createQuery(sql,Object[].class);
+		List<Object[]> list = query.getResultList();
+		return list;
 	}
 
 

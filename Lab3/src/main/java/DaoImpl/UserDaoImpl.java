@@ -4,11 +4,7 @@ import java.util.List;
 
 import Dao.UserDao;
 import Entity.Users;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 public class UserDaoImpl implements UserDao{
 	
@@ -60,6 +56,20 @@ public class UserDaoImpl implements UserDao{
 		}catch(Exception e) {
 			em.getTransaction().rollback();
 		}
+	}
+
+	@Override
+	public Users findidemail(String a) {
+		if(a.contains("@")) {
+			String sql = "select u from Users u where u.email = :value";
+			TypedQuery<Users> query = em.createQuery(sql, Users.class);
+			query.setParameter("value", a);
+			List<Users> list = query.getResultList();
+			return list.get(0);
+		}else {
+			return em.find(Users.class, a);
+		}
+		
 	}
 
 }

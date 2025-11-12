@@ -9,19 +9,22 @@
 </head>
 <body>
 	<h3>${mess}</h3>
-	<table border = "1" cellspacing = "5" cellpadding = "3">
-		<tr>
-			<th>Tên phim</th>
-			<th>Người thích</th>
-			<th>Ngày thích</th>
-		</tr>
-		<c:forEach items = "${list}" var = "a">
-			<tr>
-				<td>${a[0]}</td>
-	            <td>${a[1]}</td>
-	            <td>${a[2]}</td>
-			</tr>
-		</c:forEach>
-	</table>
+	<h2>Thông tin chia sẻ</h2><br>
+	<table border="1" cellspacing="5" cellpadding="5">
+    <tr>
+        <th>Title</th>
+        <th>Số lượng chia sẻ</th>
+        <th>Ngày chia sẻ đầu tiên</th>
+        <th>Ngày chia sẻ cuối cùng</th>
+    </tr>
+    <c:forEach items="${shareinfo}" var="a">
+        <tr>
+            <td>${a[0]}</td>
+            <td>${a[1]}</td>
+            <td>${a[2]}</td>
+            <td>${a[3]}</td>
+        </tr>
+    </c:forEach>
+</table>
 </body>
 </html>

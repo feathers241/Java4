@@ -1,14 +1,12 @@
 package DaoImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Dao.FavoriteDao;
 import Entity.Favorite;
 import Entity.Users;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 public class FavoriteDaoImpl implements FavoriteDao{
 	
@@ -70,6 +68,13 @@ public class FavoriteDaoImpl implements FavoriteDao{
 		}
 	}
 
-
+	@Override
+	public List<Object[]> tenmostliked() {
+		String sql = "select f.video.id, count(f.video) from Favorite f group by f.video.id order by count(f.video) desc";
+		TypedQuery<Object[]> query = em.createQuery(sql,Object[].class);
+		query.setMaxResults(10);
+		List<Object[]> list = query.getResultList();
+		return list;
+	}
 	
 }

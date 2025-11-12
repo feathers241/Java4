@@ -5,11 +5,7 @@ import java.util.List;
 import Dao.ShareDao;
 import Entity.Favorite;
 import Entity.Share;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
-
+import javax.persistence.*;
 public class ShareDaoImpl implements ShareDao{
 
 	EntityManagerFactory ef = Persistence.createEntityManagerFactory("PolyOE");
@@ -60,6 +56,20 @@ public class ShareDaoImpl implements ShareDao{
 		}catch(Exception e) {
 			em.getTransaction().rollback();
 		}
+	}
+
+
+	@Override
+	public List<Object[]> shareinfo() {
+		String jpql = """
+			    SELECT v.title, COUNT(s.video.id), MIN(s.shareDate), MAX(s.shareDate)
+			    FROM Share s 
+			    JOIN s.video v 
+			    GROUP BY v.title, s.video.id
+			""";
+		TypedQuery<Object[]> query = em.createQuery(jpql,Object[].class);
+		List<Object[]> list = query.getResultList();
+		return list;
 	}
 	
 }

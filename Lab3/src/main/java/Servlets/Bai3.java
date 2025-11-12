@@ -46,22 +46,15 @@ public class Bai3 extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserDao dao = new UserDaoImpl();
-		FavoriteDao fdao = new FavoriteDaoImpl();
 		VideoDao vdao = new VideoDaoImpl();
-
-		
-		String id = request.getParameter("id");
-		Users user = dao.findById(id);
-		
-		List<Favorite> favorite = fdao.findByUserId(id);
-		List<Video> list = new ArrayList();
-		for(int i = 0 ; i < favorite.size() ; i++) {
-			list.add(favorite.get(i).getVideo());
+		String keyword = request.getParameter("keyword");
+		List list = new ArrayList();
+		for(Video video : vdao.findall()) {
+			if(video.getTitle().contains(keyword)) {
+				list.add(video);
+			}
 		}
-		
-		request.setAttribute("mess", "Các video yêu thích của " + user.getFullname());
-		request.setAttribute("list", list);
+		request.setAttribute("video", list);
 		request.getRequestDispatcher("/views/Bai3.jsp").forward(request, response);
 	}
 

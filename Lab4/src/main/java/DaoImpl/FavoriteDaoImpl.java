@@ -6,10 +6,7 @@ import java.util.List;
 import Dao.FavoriteDao;
 import Entity.Favorite;
 import Entity.Users;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 public class FavoriteDaoImpl implements FavoriteDao{
 	

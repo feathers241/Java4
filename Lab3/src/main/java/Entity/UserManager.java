@@ -2,11 +2,7 @@ package Entity;
 
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;		
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 
 import org.hibernate.query.spi.QueryImplementor;

@@ -1,8 +1,6 @@
 package Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Users") // tên bảng trong SQL Server

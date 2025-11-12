@@ -1,8 +1,6 @@
 package Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Users") // tên bảng trong SQL Server
@@ -15,7 +13,7 @@ public class Users {
     private String fullname;
     private String email;
     private boolean admin;
-
+    
     public Users() {
     }
 

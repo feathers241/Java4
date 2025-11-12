@@ -4,11 +4,7 @@ import java.util.List;
 
 import Dao.UserDao;
 import Entity.Users;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 public class UserDaoImpl implements UserDao{
 	

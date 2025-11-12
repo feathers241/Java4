@@ -5,11 +5,7 @@ import java.util.List;
 import Dao.ShareDao;
 import Entity.Favorite;
 import Entity.Share;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
-
+import javax.persistence.*;
 public class ShareDaoImpl implements ShareDao{
 
 	EntityManagerFactory ef = Persistence.createEntityManagerFactory("PolyOE");

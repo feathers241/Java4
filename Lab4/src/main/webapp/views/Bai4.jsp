@@ -8,8 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	</table>
-	<h2>Thông tin chia sẻ</h2><br>	
+	<h3>${mess}</h3>
+	<h2>Thông tin chia sẻ</h2><br>
 	<table border="1" cellspacing="5" cellpadding="5">
     <tr>
         <th>Title</th>
@@ -25,6 +25,5 @@
             <td>${a[3]}</td>
         </tr>
     </c:forEach>
-	</table>
 </body>
 </html>

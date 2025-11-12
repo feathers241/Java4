@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Dao.FavoriteDao;
+import Dao.ShareDao;
 import Dao.UserDao;
 import Dao.VideoDao;
 import DaoImpl.FavoriteDaoImpl;
+import DaoImpl.ShareDaoImpl;
 import DaoImpl.UserDaoImpl;
 import DaoImpl.VideoDaoImpl;
 import Entity.Favorite;
@@ -38,20 +40,21 @@ public class Bai4 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		FavoriteDao fdao = new FavoriteDaoImpl();
-	
-		List list = new ArrayList<>();
-		for(Favorite fv : fdao.findall()) {
-			List temp = new ArrayList<>();
-			temp.add(fv.getVideo().getTitle());
-			temp.add(fv.getUser().getFullname());
-			temp.add(fv.getLikeDate());
-			list.add(temp);
+    	ShareDao sdao = new ShareDaoImpl();
+    	List<List<String>> info = new ArrayList<>();
+		for(Object[] object : sdao.shareinfo()) {
+			List<String> temp = new ArrayList<>();
+			String title = object[0].toString();
+			String sharecount = object[1].toString();
+			String firstshare = object[2].toString();
+			String lastshare = object[3].toString();
+			temp.add(title);
+			temp.add(sharecount);
+			temp.add(firstshare);
+			temp.add(lastshare);
+			info.add(temp);
 		}
-
-		request.setAttribute("mess", "Danh sách video yêu thích");
-		request.setAttribute("list", list);
-		
+		request.setAttribute("shareinfo", info);
 		request.getRequestDispatcher("/views/Bai4.jsp").forward(request, response);
 	}
 

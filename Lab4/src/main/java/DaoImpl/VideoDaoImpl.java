@@ -5,10 +5,7 @@ import java.util.List;
 import Dao.VideoDao;
 import Entity.Share;
 import Entity.Video;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import javax.persistence.*;
 
 public class VideoDaoImpl implements VideoDao{
 	

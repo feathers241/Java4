@@ -3,10 +3,7 @@ package Entity;
 import java.util.Date;
 import Entity.Video;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Favorite")
