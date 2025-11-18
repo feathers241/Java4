@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,7 +243,7 @@
 
         .poster {
             width: 100%;
-            height: 180px;
+            height: 170px;
             background: white;
             border: 2px solid #d4a574;
             display: flex;
@@ -294,6 +295,9 @@
 
         .like-btn:hover {
             background-color: #4caf50;
+        }
+        .active-btn{
+            background:#1976d2
         }
 
         .share-btn {
@@ -457,24 +461,37 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+        /* Khi nút đã được like */
+		.video-btn.liked {
+		    background-color: #2e7d32 !important;
+		    opacity: 0.9;
+		}
+		
+		/* Khi nút đã share */
+		.video-btn.shared {
+		    background-color: #e65100 !important;
+		    opacity: 0.9;
+		}
+		.active-btn{
+            background:#1976d2
+        }
     </style>
 </head>
 <body>
+	<c:url value = "${pagecontext.request.ContextPath}/indexUser" var = "url"/>
     <!-- Header -->
     <header>
         <div class="header-container">
             <div class="logo">Online Entertainment</div>
             <nav>
-                <a href="MyFavorite.html">My Favorites</a>
+            	<a href = "">${mess}</a>
+                <a href="${pageContext.request.contextPath}/MyFavorites?userid=${userid}">Mục ưu thích</a>
                 <div class="account-dropdown">
-                    <span class="dropdown-toggle">My Account ▼</span>
+                    <span class="dropdown-toggle">Tài khoản của tôi ▼</span>
                     <div class="dropdown-menu">
-                        <a href="#login">Login</a>
-                        <a href="#forgot-password">Forgot Password</a>
-                        <a href="#registration">Registration</a>
-                        <a href="#logoff">Logoff</a>
-                        <a href="#change-password">Change Password</a>
-                        <a href="#edit-profile">Edit Profile</a>
+                        <a href="indexFirst">Đăng xuất</a>
+                        <a href="ChangePassword?iduser=${userid}">Đổi mật khẩu</a>
+                        <a href="EditProfile?iduser=${userid}">Chỉnh sửa thông tin</a>
                     </div>
                 </div>
             </nav>
@@ -495,140 +512,39 @@
         <section class="content-section">
             <h2 class="section-title">Featured Content</h2>
             <div class="carousel-container">
+            <form method = "post">
                 <div class="content-grid">
-                    <div class="video-card-wrapper">
-                        <a href="CardDetail.html" class="video-card-link">
+                	<c:forEach items = "${list}" var = "a">
+                		<div class="video-card-wrapper">
+                        <a href="${pageContext.request.contextPath}/CardDetails?id=${a.id}&userid=${userid}"class="video-card-link">
                             <div class="video-card">
                                 <div class="video-card-outer">
-                                    <div class="poster">POSTER</div>
+                                    <div class="poster">
+										 <img src="${pageContext.request.contextPath}/Saved Pictures/${a.poster}" alt="${a.title}" width="100%" height="180">
+									</div>
                                 </div>
                                 <div class="video-title-section">
-                                    <h3>Video Title 1</h3>
+                                    <h3>${a.title}</h3>
                                 </div>
                             </div>
                         </a>
-                        <div class="video-buttons">
-                            <a href="Like.html" class="like-link">
-                                <button class="video-btn like-btn">Like</button>
-                            </a>
-                            <a href="Share.html" class="share-link">
-                                <button class="video-btn share-btn">Share</button>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="video-card-wrapper">
-                        <a href="CardDetail.html" class="video-card-link">
-                            <div class="video-card">
-                                <div class="video-card-outer">
-                                    <div class="poster">POSTER</div>
-                                </div>
-                                <div class="video-title-section">
-                                    <h3>Video Title 2</h3>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="video-buttons">
-                            <a href="Like.html" class="like-link">
-                                <button class="video-btn like-btn">Like</button>
-                            </a>
-                            <a href="Share.html" class="share-link">
-                                <button class="video-btn share-btn">Share</button>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="video-card-wrapper">
-                        <a href="CardDetail.html" class="video-card-link">
-                            <div class="video-card">
-                                <div class="video-card-outer">
-                                    <div class="poster">POSTER</div>
-                                </div>
-                                <div class="video-title-section">
-                                    <h3>Video Title 3</h3>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="video-buttons">
-                            <a href="Like.html" class="like-link">
-                                <button class="video-btn like-btn">Like</button>
-                            </a>
-                            <a href="Share.html" class="share-link">
-                                <button class="video-btn share-btn">Share</button>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="video-card-wrapper">
-                        <a href="CardDetail.html" class="video-card-link">
-                            <div class="video-card">
-                                <div class="video-card-outer">
-                                    <div class="poster">POSTER</div>
-                                </div>
-                                <div class="video-title-section">
-                                    <h3>Video Title 4</h3>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="video-buttons">
-                            <a href="Like.html" class="like-link">
-                                <button class="video-btn like-btn">Like</button>
-                            </a>
-                            <a href="Share.html" class="share-link">
-                                <button class="video-btn share-btn">Share</button>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="video-card-wrapper">
-                        <a href="CardDetail.html" class="video-card-link">
-                            <div class="video-card">
-                                <div class="video-card-outer">
-                                    <div class="poster">POSTER</div>
-                                </div>
-                                <div class="video-title-section">
-                                    <h3>Video Title 5</h3>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="video-buttons">
-                            <a href="Like.html" class="like-link">
-                                <button class="video-btn like-btn">Like</button>
-                            </a>
-                            <a href="Share.html" class="share-link">
-                                <button class="video-btn share-btn">Share</button>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="video-card-wrapper">
-                        <a href="CardDetail.html" class="video-card-link">
-                            <div class="video-card">
-                                <div class="video-card-outer">
-                                    <div class="poster">POSTER</div>
-                                </div>
-                                <div class="video-title-section">
-                                    <h3>Video Title 6</h3>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="video-buttons">
-                            <a href="Like.html" class="like-link">
-                                <button class="video-btn like-btn">Like</button>
-                            </a>
-                            <a href="Share.html" class="share-link">
-                                <button class="video-btn share-btn">Share</button>
-                            </a>
-                        </div>
-                    </div>
+                        	<div class="video-buttons">
+                        		<c:choose>
+                        			<c:when test="${likedIds.contains(a.id)}"><button formaction = "${pageContext.request.contextPath}/indexUser/unlike?id=${a.id}&userid=${userid}" class="video-btn like-btn btnlike active-btn">Unlike</button></c:when>
+                        			<c:otherwise><button formaction = "${pageContext.request.contextPath}/indexUser/like?id=${a.id}&userid=${userid}" class="video-btn like-btn btnlike">Like</button></c:otherwise>
+                        		</c:choose>
+                                <button class="video-btn share-btn" formaction = "${pageContext.request.contextPath}/indexUser/Share?id=${a.id}&userid=${userid}">Share</button>
+                       	 </div>
+                    	</div>
+                	</c:forEach>
                 </div>
-
+			</form>
                 <!-- Pagination Controls -->
                 <div class="pagination-controls">
-                    <button class="pagination-btn" title="First">|&lt;</button>
-                    <button class="pagination-btn" title="Previous">&lt;&lt;</button>
-                    <button class="pagination-btn" title="Next">&gt;&gt;</button>
-                    <button class="pagination-btn" title="Last">&gt;|</button>
+                     <a href="${pageContext.request.contextPath}/indexUser?page=1&userid=${userid}"><button class="pagination-btn" title="First">|&lt;</button></a>
+                     <a href="${pageContext.request.contextPath}/indexUser?page=${page > 1 ? page - 1 : 1}&userid=${userid}"><button class="pagination-btn" title="Previous">&lt;&lt;</button></a>
+                     <a href="${pageContext.request.contextPath}/indexUser?page=${page < 1 ? 1 : page+1}&userid=${userid}"><button class="pagination-btn" title="Next">&gt;&gt;</button></a>
+                     <a href="${pageContext.request.contextPath}/indexUser?page=${last}&userid=${userid}"><button class="pagination-btn" title="Last">&gt;|</button></a>
                 </div>
 
                 <!-- Carousel Dots -->
@@ -667,8 +583,28 @@
             </div>
         </section>
     </div>
-
-    <!-- Footer -->
+	<script>
+        const likeButtons = document.querySelectorAll(".btnlike");
+        likeButtons.forEach(element => {
+            element.addEventListener("click", function(){
+            element.classList.toggle("active-btn");
+                if(element.innerText === "Like"){
+                    element.innerText = "Unlike";
+                }else{
+                    element.innerText = "Like";
+                }
+            });
+        });
+        window.addEventListener("beforeunload", function () {
+            localStorage.setItem("scrollPosition", window.scrollY);
+        });
+        window.addEventListener("load", function () {
+            let pos = localStorage.getItem("scrollPosition");
+            if (pos !== null) {
+                window.scrollTo(0, parseInt(pos));
+            }
+        });
+    </script>
     <footer>
         <p>&copy; 2025 Online Entertainment. All rights reserved.</p>
         <p>Contact us: info@onlineentertainment.com | Phone: 1-800-ENTERTAIN</p>

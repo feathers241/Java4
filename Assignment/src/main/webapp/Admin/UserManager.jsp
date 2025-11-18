@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +28,7 @@
     input[type=text], input[type=password], input[type=email], select{width:100%;padding:8px;border:1px solid #ddd;border-radius:4px}
     .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
     button{padding:8px 14px;border-radius:6px;border:none;cursor:pointer}
+    .btn-Create{background:#123;color:#fff}
     .btn-update{background:#d32f2f;color:#fff}
     .btn-delete{background:#888;color:#fff}
     table{width:100%;border-collapse:collapse;margin-top:8px}
@@ -42,10 +45,10 @@
     <div class="wrap">
       <div class="brand">Administration Tool</div>
       <nav class="admin-nav">
-        <a href="index.html">Home</a>
-        <a href="VideoManager.html">Videos</a>
-        <a href="UserManager.html">Users</a>
-        <a href="ReportManager.html">Reports</a>
+        <a href="indexAdmin?adminid=${adminid}">Home</a>
+        <a href="VideoManager?adminid=${adminid}">Videos</a>
+        <a href="#">Users</a>
+        <a href="ReportManager?adminid=${adminid}">Reports</a>
       </nav>
     </div>
   </header>
@@ -59,78 +62,90 @@
             <div class="tab" data-target="list">User List</div>
           </div>
         </div>
-        <div style="color:#666;font-size:13px">Stored users: <span id="userCount">0</span></div>
+        <div style="color:#666;font-size:13px">Stored users: <span id="userCount">${UserTotal}</span></div>
       </div>
 
-      <div id="edition" class="tab-panel">
-        <form id="userForm" onsubmit="return false">
+      <div id="edition" class="tab-panel" style = "display:${EditDisplay}">
+        <form id="userForm" method = "post">
           <div class="form-row">
             <div class="field">
               <label>Username</label>
-              <input id="username" type="text" required />
+              <input id="username" type="text" required name = "id" value = "${id}"/>
             </div>
             <div class="field">
               <label>Password</label>
-              <input id="password" type="password" />
+              <input id="password" type="password" name = "password" value = "${password}"/>
             </div>
           </div>
 
           <div class="form-row">
             <div class="field">
               <label>Fullname</label>
-              <input id="fullname" type="text" />
+              <input id="fullname" type="text" name = "fullname" value = "${fullname}"/>
             </div>
             <div class="field">
               <label>Email Address</label>
-              <input id="email" type="email" />
+              <input id="email" type="email" name = "email" value = "${email}" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="field">
               <label>Role</label>
-              <select id="role">
-                <option>Admin</option>
-                <option>Editor</option>
-                <option>User</option>
+              <select id="role" name = "role">
+                <option value = "true" ${isAdmin ? 'selected' : ''}>Admin</option>
+                <option value = "false" ${isAdmin ? '' : 'selected'}>User</option>
               </select>
             </div>
             <div class="field"></div>
           </div>
 
           <div class="actions">
-            <button id="btnDelete" class="btn-delete" onclick="deleteUser()">Delete</button>
-            <button id="btnUpdate" class="btn-update" onclick="saveUser()">Update</button>
-            <button type="button" onclick="resetForm()">Reset</button>
+          	<button id="btnCreate" class="btn-Create" formaction = "${pageContext.request.contextPath}/UserManager/Create">Create</button>
+            <button id="btnDelete" class="btn-delete" formaction = "${pageContext.request.contextPath}/UserManager/Delete">Delete</button>
+            <button id="btnUpdate" class="btn-update" formaction = "${pageContext.request.contextPath}/UserManager/Update">Update</button>
+            <button type="button" formaction = "${pageContext.request.contextPath}/UserManager/Reset">Reset</button>
           </div>
         </form>
       </div>
-
-      <div id="list" class="tab-panel" style="display:none">
+	
+      <div id="list" class="tab-panel" style="display:${ListDisplay}">
         <table id="userTable">
           <thead>
-            <tr><th>Username</th><th>Password</th><th>Fullname</th><th>Email</th><th>Role</th><th>Action</th></tr>
+            <tr>
+	            <th>Username</th>
+	            <th>Password</th>
+	            <th>Fullname</th>
+	            <th>Email</th>
+	            <th>Role</th>
+	            <th>Action</th>
+            </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+          <c:forEach items = "${UserList}" var = "u">
+          <tr>
+          		<td>${u.id}</td>
+	            <td>${u.password}</td>
+	            <td>${u.fullname}</td>
+	            <td>${u.email}</td> 
+	            <td>${u.admin ? 'Admin' : 'User'}</td>
+	            <td><a href = "${pageContext.request.contextPath}/UserManager?userid=${u.id}">Edit</a></td>
+			</tr>
+          </c:forEach>
+          </tbody>
         </table>
 
         <div class="pager">
-          <button onclick="goFirst()">|&lt;</button>
-          <button onclick="goPrev()">&lt;&lt;</button>
-          <button onclick="goNext()">&gt;&gt;</button>
-          <button onclick="goLast()">&gt;|</button>
+          <a href = "${pageContext.request.contextPath}/UserManager?page=1&display=block"><button>|&lt;</button></a>
+          <a href = "${pageContext.request.contextPath}/UserManager?page=${page > 1 ? page-1 : 1}&display=block"><button>&lt;&lt;</button></a>
+          <a href = "${pageContext.request.contextPath}/UserManager?page=${page < 1 ? 1 : page+1}&display=block"><button>&gt;&gt;</button></a>
+          <a href = "${pageContext.request.contextPath}/UserManager?page=${last}&display=block"><button>&gt;|</button></a>
         </div>
       </div>
     </section>
   </main>
 
   <script>
-    // Simple client-side user manager (localStorage)
-    const STORAGE_KEY = 'user_manager_v1';
-    let users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    let editingIndex = -1;
-    const pageSize = 10;
-    let currentPage = 0;
 
     // Tabs
     document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
@@ -140,79 +155,6 @@
       document.getElementById(t.dataset.target).style.display='block';
       if(t.dataset.target === 'list') renderList();
     }));
-
-    function saveUser(){
-      const u = document.getElementById('username').value.trim();
-      if(!u){alert('Username required');return}
-      const payload = {
-        username: u,
-        password: document.getElementById('password').value,
-        fullname: document.getElementById('fullname').value,
-        email: document.getElementById('email').value,
-        role: document.getElementById('role').value
-      };
-      if(editingIndex >=0){
-        users[editingIndex] = payload;
-      } else {
-        users.push(payload);
-      }
-      persist();
-      resetForm();
-      alert('Saved');
-    }
-
-    function deleteUser(){
-      if(editingIndex<0){alert('No user selected');return}
-      if(!confirm('Delete this user?')) return;
-      users.splice(editingIndex,1);
-      persist();
-      resetForm();
-    }
-
-    function persist(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-      document.getElementById('userCount').textContent = users.length;
-      renderList();
-    }
-
-    function resetForm(){
-      editingIndex = -1;
-      document.getElementById('userForm').reset();
-      document.getElementById('btnUpdate').textContent = 'Update';
-    }
-
-
-    function editUser(idx){
-      const u = users[idx];
-      if(!u) return;
-      editingIndex = idx;
-      document.getElementById('username').value = u.username;
-      document.getElementById('password').value = u.password;
-      document.getElementById('fullname').value = u.fullname;
-      document.getElementById('email').value = u.email;
-      document.getElementById('role').value = u.role;
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      document.querySelector('[data-target="edition"]').classList.add('active');
-      document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
-      document.getElementById('edition').style.display='block';
-      document.getElementById('btnUpdate').textContent = 'Save';
-    }
-
-    function goFirst(){ currentPage = 0; renderList(); }
-    function goPrev(){ if(currentPage>0) currentPage--; renderList(); }
-    function goNext(){ if((currentPage+1)*pageSize < users.length) currentPage++; renderList(); }
-    function goLast(){ currentPage = Math.max(0, Math.ceil(users.length/pageSize)-1); renderList(); }
-
-    function escapeHtml(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
-
-    // seed sample user if empty
-    if(users.length===0){
-      users.push({username:'TeonV',password:'123456',fullname:'Nguyễn Văn Tèo',email:'teonv@gmail.com',role:'Admin'});
-      persist();
-    } else {
-      document.getElementById('userCount').textContent = users.length;
-      renderList();
-    }
   </script>
 </body>
 </html>

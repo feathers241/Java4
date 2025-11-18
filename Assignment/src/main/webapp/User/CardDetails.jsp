@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Details - Online Entertainment</title>
     <style>
+    .video-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+     .like-btn {
+            background-color: #66bb6a;
+        }
+
+        .like-btn:hover {
+            background-color: #4caf50;
+        }
+        .active-btn{
+            background:#1976d2
+        }
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +39,6 @@
             background-color: #f5f5f5;
         }
 
-        /* Header and Navigation */
         header {
             background: linear-gradient(135deg, #FFD700 0%, #FFC700 100%);
             padding: 20px 0;
@@ -236,13 +256,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .like-btn {
-            background-color: #1976d2;
-        }
 
-        .like-btn:hover {
-            background-color: #1565c0;
-        }
 
         .share-btn {
             background-color: #ff9800;
@@ -378,16 +392,13 @@
         <div class="header-container">
             <div class="logo">Online Entertainment</div>
             <nav>
-                <a href="index.html">My Favorites</a>
+                <a href="${pageContext.request.contextPath}/MyFavorites?userid=${userid}&id=${id}">My Favorites</a>
                 <div class="account-dropdown">
                     <span class="dropdown-toggle">My Account ▼</span>
                     <div class="dropdown-menu">
-                        <a href="#login">Login</a>
-                        <a href="#forgot-password">Forgot Password</a>
-                        <a href="#registration">Registration</a>
-                        <a href="#logoff">Logoff</a>
-                        <a href="#change-password">Change Password</a>
-                        <a href="#edit-profile">Edit Profile</a>
+                        <a href="indexFirst">Đăng xuất</a>
+                        <a href="ChangePassword?iduser=${userid}">Đổi mật khẩu</a>
+                        <a href="EditProfile?iduser=${userid}">Chỉnh sửa thông tin</a>
                     </div>
                 </div>
             </nav>
@@ -398,7 +409,7 @@
     <div class="container">
         <!-- Back Link -->
         <div class="back-link">
-            <a href="index.html">← Back to Featured Content</a>
+            <a href="${pageContext.request.contextPath}/indexUser?userid=${userid}">← Back to Featured Content</a>
         </div>
 
         <!-- Details Layout -->
@@ -406,32 +417,34 @@
             <!-- Main Video Section -->
             <section class="video-section">
                 <!-- Video Player -->
-                <div class="video-player">VIDEO</div>
+                <div class="video-player">
+                	<img src="${pageContext.request.contextPath}/Saved Pictures/${main.poster}" alt="${main.title}" width="100%" height="400">
+                </div>
 
                 <!-- Video Info -->
                 <div class="video-info">
                     <!-- Title Section -->
                     <div class="video-title-section">
-                        <h2>Video Title</h2>
+                        <h2>${main.title}</h2>
                     </div>
 
                     <!-- Description Section -->
                     <div class="description-section">
-                        <div class="description-label">Description</div>
+                        <div class="description-label">Mô tả</div>
                         <p class="description-text">
-                            This is the detailed description of the video content. It provides comprehensive information about the video, including plot summary, cast information, production details, and other relevant information that helps viewers understand and decide if they want to watch the full content.
+							${main.description}
                         </p>
                     </div>
-
                     <!-- Action Buttons -->
+                    <form method = "post">
                     <div class="action-buttons">
-                        <a href="Like.html" style="text-decoration: none; flex: 1;">
-                            <button class="action-btn like-btn" style="width: 100%;">Like</button>
-                        </a>
-                        <a href="Share.html" style="text-decoration: none; flex: 1;">
-                            <button class="action-btn share-btn" style="width: 100%;">Share</button>
-                        </a>
-                    </div>
+                    		<c:choose>
+                        			<c:when test="${likedIds.contains(main.id)}"><button formaction = "${pageContext.request.contextPath}/CardDetails/unlike?id=${main.id}&userid=${userid}" class="video-btn like-btn btnlike active-btn action-btn">Unlike</button></c:when>
+                        			<c:otherwise><button formaction = "${pageContext.request.contextPath}/CardDetails/like?id=${main.id}&userid=${userid}" class="video-btn like-btn btnlike action-btn">Like</button></c:otherwise>
+                        	</c:choose>
+                            <button class="action-btn share-btn" style="width: 100%;" formaction = "${pageContext.request.contextPath}/CardDetails/Share?id=${main.id}&userid=${userid}">Share</button>
+                    </div>             
+                    </form>
                 </div>
             </section>
 
@@ -439,49 +452,40 @@
             <aside class="sidebar">
                 <h3 class="sidebar-title">Related Videos</h3>
                 <div class="related-video-list">
-                    <div class="related-video-item">
-                        <div class="related-video-poster">POSTER</div>
+                <c:forEach items = "${list}" var = "a">
+                <a href="CardDetails?id=${a.id}&userid=${userid}" class="video-card-link">
+                	<div class="related-video-item">
+                        <div class="related-video-poster">
+							<img src="${pageContext.request.contextPath}/Saved Pictures/${a.poster}" alt="${a.title}" width="100%" height="80">
+						</div>
                         <div class="related-video-info">
-                            <div class="related-video-title">Video Title</div>
+                            <div class="related-video-title">${a.title}</div>
                         </div>
                     </div>
-
-                    <div class="related-video-item">
-                        <div class="related-video-poster">POSTER</div>
-                        <div class="related-video-info">
-                            <div class="related-video-title">Video Title</div>
-                        </div>
-                    </div>
-
-                    <div class="related-video-item">
-                        <div class="related-video-poster">POSTER</div>
-                        <div class="related-video-info">
-                            <div class="related-video-title">Video Title</div>
-                        </div>
-                    </div>
-
-                    <div class="related-video-item">
-                        <div class="related-video-poster">POSTER</div>
-                        <div class="related-video-info">
-                            <div class="related-video-title">Video Title</div>
-                        </div>
-                    </div>
-
-                    <div class="related-video-item">
-                        <div class="related-video-poster">POSTER</div>
-                        <div class="related-video-info">
-                            <div class="related-video-title">Video Title</div>
-                        </div>
-                    </div>
+                   </a>
+                </c:forEach>
                 </div>
             </aside>
         </div>
     </div>
-
+	
     <!-- Footer -->
     <footer>
         <p>&copy; 2025 Online Entertainment. All rights reserved.</p>
         <p>Contact us: info@onlineentertainment.com | Phone: 1-800-ENTERTAIN</p>
     </footer>
+    <script>
+        const likeButtons = document.querySelectorAll(".btnlike");
+        likeButtons.forEach(element => {
+            element.addEventListener("click", function(){
+            element.classList.toggle("active-btn");
+                if(element.innerText === "Like"){
+                    element.innerText = "Unlike";
+                }else{
+                    element.innerText = "Like";
+                }
+            });
+        });
+    </script>
 </body>
 </html>

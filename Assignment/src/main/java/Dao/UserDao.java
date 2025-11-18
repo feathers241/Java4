@@ -8,5 +8,6 @@ public interface UserDao extends CrudDao<Users,String>{
 
 	List<Users> findall();
 	Users findidemail(String a);
+	List<Users> find6User (int a, int b);
 	
 }

@@ -23,7 +23,8 @@ public class Favorite {
 
 	    @Temporal(TemporalType.DATE)
 	    private Date likeDate;
-	
+	    
+	    
 	public Favorite(String a ,Users b, Video c, Date d) {
 		this.id = a;
 		this.user = b;
@@ -80,4 +81,3 @@ public class Favorite {
         this.likeDate = likeDate;
     }
 }
-

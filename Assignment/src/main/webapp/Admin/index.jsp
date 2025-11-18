@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,10 +60,10 @@
 		<div class="wrap">
 			<div class="brand">Administration Tool</div>
 			<nav class="admin-nav">
-				<a href="index.html">Home</a>
-				<a href="VideoManager.html">Videos</a>
-				<a href="UserManager.html">Users</a>
-				<a href="ReportManager.html">Reports</a>
+				<a href="">Xin chào admin : ${fullname}</a>
+				<a href="VideoManager?adminid=${adminid}">Videos</a>
+				<a href="UserManager?adminid=${adminid}">Users</a>
+				<a href="ReportManager?adminid=${adminid}">Reports</a>
 			</nav>
 		</div>
 	</header>
@@ -72,7 +73,7 @@
 			<div class="stat-card">
 				<div>
 					<div class="label">Total Videos</div>
-					<div class="value">1,248</div>
+					<div class="value">${VideoTotal}</div>
 				</div>
 				<div class="sub">Updated 5 minutes ago</div>
 			</div>
@@ -80,15 +81,15 @@
 			<div class="stat-card">
 				<div>
 					<div class="label">Active Users</div>
-					<div class="value">3,412</div>
+					<div class="value">${UserTotal}</div>
 				</div>
 				<div class="sub">Last 24 hours</div>
 			</div>
 
 			<div class="stat-card">
 				<div>
-					<div class="label">New Signups</div>
-					<div class="value">72</div>
+					<div class="label">Favorite</div>
+					<div class="value">${FavoriteTotal}</div>
 				</div>
 				<div class="sub">Today</div>
 			</div>
@@ -107,12 +108,22 @@
 				<h3>Recent Videos</h3>
 				<table>
 					<thead>
-						<tr><th>Title</th><th>Uploaded</th><th>Views</th><th>Status</th></tr>
+						<tr>
+							<th>Title</th>
+							<th>Poster</th>
+							<th>Views</th>
+							<th>Status</th>
+						</tr>
 					</thead>
 					<tbody>
-						<tr><td>Summer Highlights</td><td>2d</td><td>12,345</td><td>Published</td></tr>
-						<tr><td>Interview: Team Lead</td><td>3d</td><td>3,210</td><td>Published</td></tr>
-						<tr><td>How to: Make a Trailer</td><td>4d</td><td>1,120</td><td>Draft</td></tr>
+					<c:forEach items = "${VideoList}" var = "v">
+						<tr>
+							<td>${v.title}</td>
+							<td><a href = "http://localhost:8080/Assignment/DetailFirst?id=${v.id}"><img src="${pageContext.request.contextPath}/Saved Pictures/${v.poster}" width="100%" height="50"></a></td>
+							<td>${v.views}</td>
+							<td>${v.active ? 'Đang hoạt động' : 'Không hoạt động' }</td>
+						</tr>
+					</c:forEach>
 					</tbody>
 				</table>
 			</div>
@@ -120,9 +131,9 @@
 			<aside class="panel">
 				<h3>Quick Actions</h3>
 				<div style="display:flex;flex-direction:column;gap:8px">
-					<a href="VideoManager.html" style="text-decoration:none"><button style="padding:10px;border-radius:6px;border:none;background:#1976d2;color:#fff;cursor:pointer">Create New Video</button></a>
-					<a href="ReportManager.html" style="text-decoration:none"><button style="padding:10px;border-radius:6px;border:none;background:#4caf50;color:#fff;cursor:pointer">Approve Reports</button></a>
-					<a href="UserManager.html" style="text-decoration:none"><button style="padding:10px;border-radius:6px;border:none;background:#ff9800;color:#fff;cursor:pointer">Manage Users</button></a>
+					<a href="VideoManager" style="text-decoration:none"><button style="padding:10px;border-radius:6px;border:none;background:#1976d2;color:#fff;cursor:pointer">Create New Video</button></a>
+					<a href="ReportManager" style="text-decoration:none"><button style="padding:10px;border-radius:6px;border:none;background:#4caf50;color:#fff;cursor:pointer">Approve Reports</button></a>
+					<a href="UserManager" style="text-decoration:none"><button style="padding:10px;border-radius:6px;border:none;background:#ff9800;color:#fff;cursor:pointer">Manage Users</button></a>
 				</div>
 
 				<h3 style="margin-top:18px">Recent Signups</h3>

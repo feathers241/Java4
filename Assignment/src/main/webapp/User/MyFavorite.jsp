@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +48,9 @@
         .empty-state{background:#fff;border:2px solid #d4a574;padding:30px;border-radius:4px;text-align:center}
         .empty-state h3{font-size:20px;margin-bottom:12px}
         .empty-state p{color:#666}
+        .active-btn{
+            background-color: #66bb6a;
+        }
     </style>
 </head>
 <body>
@@ -54,8 +58,7 @@
         <div class="header-container">
             <div class="logo">Online Entertainment</div>
             <nav>
-                <a href="index.html">Home</a>
-                <a href="MyFavorite.html">My Favorites</a>
+                <a href="${pageContext.request.contextPath}/indexUser?userid=${userid}">Home</a>
             </nav>
         </div>
     </header>
@@ -64,97 +67,28 @@
         <h2 class="section-title">My Favorites</h2>
 
         <!-- If there are liked videos, show them in a 3-column grid. This is a static demo with 6 cards. -->
+		<form method = "post">
         <div class="content-grid">
-            <div class="video-card-wrapper">
-                <a href="CardDetail.html" class="video-card-link">
+        <c:forEach items = "${list}" var = "a">
+        	<div class="video-card-wrapper">
+                <a href="${pageContext.request.contextPath}/CardDetails?id=${a.id}&userid=${userid}" class="video-card-link">
                     <div class="video-card">
                         <div class="video-card-outer">
-                            <div class="poster">POSTER</div>
-                            <div class="video-title-section"><h3>Video Title 1</h3></div>
+                            <div class="poster">
+                            	<img src="${pageContext.request.contextPath}/Saved Pictures/${a.poster}" alt="${a.title}" width="100%" height="180">
+                            </div>
+                            <div class="video-title-section"><h3>${a.title}</h3></div>
                         </div>
                     </div>
                 </a>
                 <div class="video-buttons">
-                    <a href="index.html"><button class="video-btn unlike-btn">Unlike</button></a>
-                    <a href="Share.html"><button class="video-btn share-btn">Share</button></a>
+                    <button class="video-btn unlike-btn btnlike" formaction = "${pageContext.request.contextPath}/MyFavorites/unlike?id=${a.id}&userid=${userid}">Unlike</button>
+                   <button class="video-btn share-btn" formaction = "${pageContext.request.contextPath}/MyFavorites/Share?id=${a.id}&userid=${userid}">Share</button>
                 </div>
             </div>
-
-            <div class="video-card-wrapper">
-                <a href="CardDetail.html" class="video-card-link">
-                    <div class="video-card">
-                        <div class="video-card-outer">
-                            <div class="poster">POSTER</div>
-                            <div class="video-title-section"><h3>Video Title 2</h3></div>
-                        </div>
-                    </div>
-                </a>
-                <div class="video-buttons">
-                    <a href="index.html"><button class="video-btn unlike-btn">Unlike</button></a>
-                    <a href="Share.html"><button class="video-btn share-btn">Share</button></a>
-                </div>
-            </div>
-
-            <div class="video-card-wrapper">
-                <a href="CardDetail.html" class="video-card-link">
-                    <div class="video-card">
-                        <div class="video-card-outer">
-                            <div class="poster">POSTER</div>
-                            <div class="video-title-section"><h3>Video Title 3</h3></div>
-                        </div>
-                    </div>
-                </a>
-                <div class="video-buttons">
-                    <a href="index.html"><button class="video-btn unlike-btn">Unlike</button></a>
-                    <a href="Share.html"><button class="video-btn share-btn">Share</button></a>
-                </div>
-            </div>
-
-            <div class="video-card-wrapper">
-                <a href="CardDetail.html" class="video-card-link">
-                    <div class="video-card">
-                        <div class="video-card-outer">
-                            <div class="poster">POSTER</div>
-                            <div class="video-title-section"><h3>Video Title 4</h3></div>
-                        </div>
-                    </div>
-                </a>
-                <div class="video-buttons">
-                    <a href="index.html"><button class="video-btn unlike-btn">Unlike</button></a>
-                    <a href="Share.html"><button class="video-btn share-btn">Share</button></a>
-                </div>
-            </div>
-
-            <div class="video-card-wrapper">
-                <a href="CardDetail.html" class="video-card-link">
-                    <div class="video-card">
-                        <div class="video-card-outer">
-                            <div class="poster">POSTER</div>
-                            <div class="video-title-section"><h3>Video Title 5</h3></div>
-                        </div>
-                    </div>
-                </a>
-                <div class="video-buttons">
-                    <a href="index.html"><button class="video-btn unlike-btn">Unlike</button></a>
-                    <a href="Share.html"><button class="video-btn share-btn">Share</button></a>
-                </div>
-            </div>
-
-            <div class="video-card-wrapper">
-                <a href="CardDetail.html" class="video-card-link">
-                    <div class="video-card">
-                        <div class="video-card-outer">
-                            <div class="poster">POSTER</div>
-                            <div class="video-title-section"><h3>Video Title 6</h3></div>
-                        </div>
-                    </div>
-                </a>
-                <div class="video-buttons">
-                    <a href="index.html"><button class="video-btn unlike-btn">Unlike</button></a>
-                    <a href="Share.html"><button class="video-btn share-btn">Share</button></a>
-                </div>
-            </div>
+        </c:forEach>
         </div>
+        </form>
 
         <!-- Example empty state (uncomment to use when the user has no favorites) -->
         <!--
@@ -164,7 +98,19 @@
         </div>
         -->
     </div>
-
+	<script>
+        const likeButtons = document.querySelectorAll(".btnlike");
+        likeButtons.forEach(element => {
+            element.addEventListener("click", function(){
+            element.classList.toggle("active-btn");
+                if(element.innerText === "Unlike"){
+                    element.innerText = "Like";
+                }else{
+                    element.innerText = "Unlike";
+                }
+            });
+        });
+    </script>
     <footer>
         <p>&copy; 2025 Online Entertainment. All rights reserved.</p>
         <p>Contact us: info@onlineentertainment.com | Phone: 1-800-ENTERTAIN</p>

@@ -79,6 +79,17 @@ public class VideoDaoImpl implements VideoDao{
 		return list;
 	}
 
+	public List<Video> findVideosByPage(int page, int pageSize){
+	    String jpql = "SELECT v FROM Video v ORDER BY v.id";
+	    TypedQuery<Video> query = em.createQuery(jpql, Video.class);
+
+	    int offset = (page - 1) * pageSize;
+
+	    query.setFirstResult(offset);
+	    query.setMaxResults(pageSize);
+
+	    return query.getResultList();
+	}
 
 	
 }

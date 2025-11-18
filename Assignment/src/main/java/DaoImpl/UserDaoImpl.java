@@ -4,6 +4,8 @@ import java.util.List;
 
 import Dao.UserDao;
 import Entity.Users;
+import Entity.Video;
+
 import javax.persistence.*;
 
 public class UserDaoImpl implements UserDao{
@@ -70,6 +72,17 @@ public class UserDaoImpl implements UserDao{
 			return em.find(Users.class, a);
 		}
 		
+	}
+
+	@Override
+	public List<Users> find6User(int page, int pageSize) {
+		String jpql = "SELECT v FROM Users v ORDER BY v.id";
+	    TypedQuery<Users> query = em.createQuery(jpql, Users.class);
+	    int offset = (page - 1) * pageSize;
+	    query.setFirstResult(offset);
+	    query.setMaxResults(pageSize);
+
+	    return query.getResultList();
 	}
 
 }

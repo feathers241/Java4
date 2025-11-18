@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri ="http://java.sun.com/jsp/jstl/core" prefix = "c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,10 +82,10 @@
     <div class="wrap">
       <div class="brand">Administration Tool</div>
       <nav class="admin-nav">
-        <a href="index.html">Home</a>
-        <a href="VideoManager.html">Videos</a>
-        <a href="UserManager.html">Users</a>
-        <a href="ReportManager.html">Reports</a>
+        <a href="indexAdmin?adminid=${adminid}">Home</a>
+        <a href="#">Videos</a>
+        <a href="UserManager?adminid=${adminid}">Users</a>
+        <a href="ReportManager?adminid=${adminid}">Reports</a>
       </nav>
     </div>
   </header>
@@ -96,166 +97,89 @@
     </div>
 
     <div class="panel">
-      <div id="edition" class="tab-panel">
+    <form method = "post">
+      <div id="edition" class="tab-panel" style = "display:${EditorDisplay}">
         <div class="editor">
           <div>
-            <div class="poster-box" id="posterBox">POSTER</div>
+            <div class="poster-box" id="posterBox" ><img src="${pageContext.request.contextPath}/Saved Pictures/${VideoPoster}" alt="${a.title}" width="100%" height="200"></div>
+               <input type = "file" value ="${pageContext.request.contextPath}/Saved Pictures/${poster}" name = "PosterName">
+               <input type = "hidden" value = "${poster}" name = "hiddenposter">
           </div>
           <div>
-            <div class="field"><label for="ytid">Youtube Id?</label><input id="ytid" type="text"></div>
-            <div class="field"><label for="title">Video Title?</label><input id="title" type="text"></div>
-            <div class="field"><label for="views">View Count?</label><input id="views" type="number" value="0"></div>
+            <div class="field"><label for="ytid">Youtube Id?</label><input id="ytid" type="text" value = "${Youtubeid}" name = "Youtubeid"></div>
+            <div class="field"><label for="title">Video Title?</label><input id="title" type="text" value = "${VideoTitle}" name = "VideoTitle"></div>
+            <div class="field"><label for="views">View Count?</label><input id="views" type="number" value="${ViewCount}" name = "ViewCount"></div>
             <div class="status-row">
               <label style="margin:0">Status:</label>
-              <label><input id="statusActive" name="status" type="radio" value="active" checked> Active</label>
-              <label><input id="statusInactive" name="status" type="radio" value="inactive"> Inactive</label>
+              <label><input id="statusActive" name="Status" type="radio" value="true" ${Status ? 'checked' : ''}> Active</label>
+              <label><input id="statusInactive" name="Status" type="radio" value="false" ${Status ? '' : 'checked'}> Inactive</label>
             </div>
-            <div class="field"><label for="desc">Description?</label><textarea id="desc"></textarea></div>
+            <div class="field"><label for="desc">Description?</label><textarea id="desc" name = "Description">${Description}</textarea></div>
 
             <div class="actions-row">
-              <button class="btn create" id="btnCreate">Create</button>
-              <button class="btn update" id="btnUpdate">Update</button>
-              <button class="btn delete" id="btnDelete">Delete</button>
-              <button class="btn reset" id="btnReset">Reset</button>
+              <button class="btn create" id="btnCreate" formaction = "${pageContext.request.contextPath}/VideoManager/Create">Create</button>
+              <button class="btn update" id="btnUpdate" formaction = "${pageContext.request.contextPath}/VideoManager/Update">Update</button>
+              <button class="btn delete" id="btnDelete" formaction = "${pageContext.request.contextPath}/VideoManager/Delete">Delete</button>
+              <button class="btn reset" id="btnReset" formaction = "${pageContext.request.contextPath}/VideoManager/Reset">Reset</button>
             </div>
           </div>
         </div>
       </div>
+     </form>
 
-      <div id="list" class="tab-panel" style="display:none">
+      <div id="list" class="tab-panel"  style = "display:${ListDisplay}" >
         <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
           <div style="font-weight:700;color:#c84b22">Video List</div>
-          <div style="color:#666;font-size:13px"><span id="totalCount">0</span> videos</div>
+          <div style="color:#666;font-size:13px"><span id="totalCount">${VideoTotal }</span> videos</div>
         </div>
 
         <table id="videoTable">
           <thead>
-            <tr><th>Youtube Id</th><th>Video Title</th><th>View Count</th><th>Status</th><th></th></tr>
+            <tr>
+	            <th>Youtube Id</th>
+	            <th>Video Title</th><th>View Count</th>
+	            <th>Status</th>
+	            <th></th>
+            </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+          	<c:forEach items = "${VideoList}" var = "v">
+          		 <tr>
+		            <th><a href = "http://localhost:8080/Assignment/DetailFirst?id=${v.id}">${v.id}</a></th>
+		            <th>${v.title}</th>
+		            <th>${v.views}</th>
+		            <th>${v.active ? 'Đang hoạt động' : 'Không hoạt động' }</th>
+		            <th><a href = "${pageContext.request.contextPath}/VideoManager?videoid=${v.id}">Edit</a></th>
+           		 </tr>
+          	</c:forEach>
+          </tbody>
         </table>
 
         <div class="pager">
-          <button class="pgbtn" id="first">|&lt;</button>
-          <button class="pgbtn" id="prev">&lt;&lt;</button>
+          <a href = "${pageContext.request.contextPath}/VideoManager?page=1&display=block"><button class="pgbtn" id="first">|&lt;</button></a>
+          <a href = "${pageContext.request.contextPath}/VideoManager?page=${page > 1 ? page-1 : 1}&display=block"><button class="pgbtn" id="prev">&lt;&lt;</button></a>
+          
           <div id="pageInfo" style="padding:6px 10px;color:#666"></div>
-          <button class="pgbtn" id="next">&gt;&gt;</button>
-          <button class="pgbtn" id="last">&gt;|</button>
+          
+          <a href = "${pageContext.request.contextPath}/VideoManager?page=${page < 1 ? 1 : page+1}&display=block"><button class="pgbtn" id="next">&gt;&gt;</button></a>
+          <a href = "${pageContext.request.contextPath}/VideoManager?page=${last}&display=block"><button class="pgbtn" id="last">&gt;|</button></a>
         </div>
       </div>
     </div>
   </main>
-
   <script>
-    // Simple localStorage-backed manager for demo
-    const STORAGE_KEY = 'video_manager_v1';
-    let videos = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || [
-      {ytid:'Ytet_bPiRCU', title:'Lâu ghê mới gặp', views:105, status:'active', desc:'Sample video'}
-    ];
-    let editingIndex = null;
-
-    // Pagination
-    let page = 1; const perPage = 5;
-
-    // Elements
-    const tbody = document.querySelector('#videoTable tbody');
-    const totalCountEl = document.getElementById('totalCount');
-    const pageInfo = document.getElementById('pageInfo');
-
-    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(videos)); }
-
-    function renderList(){
-      const start = (page-1)*perPage; const end = start+perPage;
-      const pageItems = videos.slice(start,end);
-      tbody.innerHTML = '';
-      pageItems.forEach((v,i)=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${v.ytid}</td><td>${v.title}</td><td>${v.views}</td><td>${v.status}</td><td><span class="edit-link" data-index="${start+i}">Edit</span></td>`;
-        tbody.appendChild(tr);
-      });
-      totalCountEl.textContent = videos.length;
-      const totalPages = Math.max(1, Math.ceil(videos.length/perPage));
-      pageInfo.textContent = `Page ${page} of ${totalPages}`;
-    }
-
-    function resetForm(){
-      document.getElementById('ytid').value='';
-      document.getElementById('title').value='';
-      document.getElementById('views').value=0;
-      document.getElementById('desc').value='';
-      document.getElementById('statusActive').checked=true;
-      editingIndex = null;
-    }
-
-    function createVideo(){
-      const v = { ytid:document.getElementById('ytid').value.trim(), title:document.getElementById('title').value.trim(), views:parseInt(document.getElementById('views').value)||0, status: document.getElementById('statusActive').checked? 'active':'inactive', desc:document.getElementById('desc').value };
-      if(!v.ytid || !v.title){ alert('Youtube Id and Title are required'); return; }
-      videos.unshift(v);
-      save(); renderList(); resetForm();
-    }
-
-    function updateVideo(){
-      if(editingIndex===null){ alert('Select a video to edit first (click Edit in the list)'); return; }
-      const v = videos[editingIndex];
-      v.ytid = document.getElementById('ytid').value.trim();
-      v.title = document.getElementById('title').value.trim();
-      v.views = parseInt(document.getElementById('views').value)||0;
-      v.status = document.getElementById('statusActive').checked? 'active':'inactive';
-      v.desc = document.getElementById('desc').value;
-      save(); renderList(); resetForm();
-    }
-
-    function deleteVideo(){
-      if(editingIndex===null){ alert('Select a video to delete'); return; }
-      if(!confirm('Delete this video?')) return;
-      videos.splice(editingIndex,1);
-      save(); renderList(); resetForm();
-    }
-
-    // Edit from list
-    document.addEventListener('click', function(e){
-      if(e.target && e.target.classList.contains('edit-link')){
-        const idx = parseInt(e.target.getAttribute('data-index'));
-        editingIndex = idx;
-        const v = videos[idx];
-        document.getElementById('ytid').value=v.ytid;
-        document.getElementById('title').value=v.title;
-        document.getElementById('views').value=v.views;
-        document.getElementById('desc').value=v.desc||'';
-        if(v.status==='active') document.getElementById('statusActive').checked=true; else document.getElementById('statusInactive').checked=true;
-        window.scrollTo({top:0,behavior:'smooth'});
-      }
-    });
-
-    // Tab handling (match UserManager behavior)
-    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', ()=>{
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active');
-      document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
-      const target = t.dataset.target;
-      const panel = document.getElementById(target);
-      if(panel) panel.style.display = 'block';
-      if(target === 'list') renderList();
-      else window.scrollTo({top:0,behavior:'smooth'});
-    }));
-    // make first tab active on load
-    const _first = document.querySelector('.tab'); if(_first) _first.classList.add('active');
-
-    // Buttons
-    document.getElementById('btnCreate').addEventListener('click', createVideo);
-    document.getElementById('btnUpdate').addEventListener('click', updateVideo);
-    document.getElementById('btnDelete').addEventListener('click', deleteVideo);
-    document.getElementById('btnReset').addEventListener('click', resetForm);
-
-    // Pager
-    document.getElementById('first').addEventListener('click', ()=>{ page=1; renderList(); });
-    document.getElementById('prev').addEventListener('click', ()=>{ if(page>1) page--; renderList(); });
-    document.getElementById('next').addEventListener('click', ()=>{ const totalPages = Math.max(1, Math.ceil(videos.length/perPage)); if(page<totalPages) page++; renderList(); });
-    document.getElementById('last').addEventListener('click', ()=>{ page = Math.max(1, Math.ceil(videos.length/perPage)); renderList(); });
-
-    // init
-    renderList();
-    resetForm();
+//Tab handling (match UserManager behavior)
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
+    const target = t.dataset.target;
+    const panel = document.getElementById(target);
+    if(panel) panel.style.display = 'block';
+    if(target === 'list') renderList();
+    else window.scrollTo({top:0,behavior:'smooth'});
+  }));
+  // make first tab active on load   const _first = document.querySelector('.tab'); if(_first) _first.classList.add('active');
   </script>
 </body>
 </html>

@@ -296,17 +296,14 @@
     <header>
         <div class="header-container">
             <div class="logo">Online Entertainment</div>
-            <nav>
-                <a href="index.html">My Favorites</a>
+             <nav>
+                <a href="MyFavorites?userid=${userid}">Mục ưu thích</a>
                 <div class="account-dropdown">
-                    <span class="dropdown-toggle">My Account ▼</span>
+                    <span class="dropdown-toggle">Tài khoản của tôi ▼</span>
                     <div class="dropdown-menu">
-                        <a href="#login">Login</a>
-                        <a href="#forgot-password">Forgot Password</a>
-                        <a href="#registration">Registration</a>
-                        <a href="#logoff">Logoff</a>
-                        <a href="#change-password">Change Password</a>
-                        <a href="#edit-profile">Edit Profile</a>
+                        <a href="indexFirst">Đăng xuất</a>
+                        <a href="ChangePassword?userid=${userid}">Đổi mật khẩu</a>
+                        <a href="EditProfile?userid=${userid}">Chỉnh sửa thông tin</a>
                     </div>
                 </div>
             </nav>
@@ -326,17 +323,17 @@
             <div class="form-header">
                 <h2>Send Video to Your Friend</h2>
             </div>
-
             <!-- Form Content -->
-            <form class="form-content" id="shareForm">
+            <form class="form-content" id="shareForm" method = "post">
                 <div class="form-group">
-                    <label for="friendEmail" class="form-label">Your Friend's Email?</label>
+                    <label for="friendEmail" class="form-label">Gửi video đến email</label>
                     <input 
                         type="email" 
                         id="friendEmail" 
                         class="form-input" 
                         placeholder="Enter your friend's email address" 
                         required
+                        name = "email"
                     >
                 </div>
 
@@ -345,11 +342,6 @@
                     <button type="submit" class="send-btn">Send</button>
                 </div>
             </form>
-
-            <!-- Success Message -->
-            <div class="success-message" id="successMessage">
-                ✓ Video shared successfully! Your friend will receive it shortly.
-            </div>
         </div>
     </div>
 
@@ -358,32 +350,5 @@
         <p>&copy; 2025 Online Entertainment. All rights reserved.</p>
         <p>Contact us: info@onlineentertainment.com | Phone: 1-800-ENTERTAIN</p>
     </footer>
-
-    <script>
-        // Handle form submission
-        document.getElementById('shareForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const emailInput = document.getElementById('friendEmail');
-            const email = emailInput.value.trim();
-            
-            // Basic email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (emailRegex.test(email)) {
-                // Hide form and show success message
-                document.getElementById('shareForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                
-                // Optionally redirect after a delay
-                setTimeout(function() {
-                    history.back();
-                }, 3000);
-            } else {
-                alert('Please enter a valid email address.');
-                emailInput.focus();
-            }
-        });
-    </script>
 </body>
 </html>

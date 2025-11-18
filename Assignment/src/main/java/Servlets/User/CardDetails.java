@@ -1,0 +1,120 @@
+package Servlets.User;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import Dao.FavoriteDao;
+import Dao.UserDao;
+import Dao.VideoDao;
+import DaoImpl.FavoriteDaoImpl;
+import DaoImpl.UserDaoImpl;
+import DaoImpl.VideoDaoImpl;
+import Entity.Favorite;
+import Entity.Users;
+import Entity.Video;
+
+/**
+ * Servlet implementation class CardDetails
+ */
+@WebServlet({"/CardDetails/*","/CardDetails/Share"})
+public class CardDetails extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CardDetails() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		VideoDao vdao = new VideoDaoImpl();
+		FavoriteDao fdao = new FavoriteDaoImpl();
+
+		String userid = request.getParameter("userid");
+		String id = request.getParameter("id");
+		request.setAttribute("userid", userid);
+		request.setAttribute("id", id);
+
+
+		if(id != null) {
+			request.setAttribute("main", vdao.findById(id));
+			Video video = vdao.findById(id);
+			video.setViews(video.getViews()+1);
+			vdao.update(video);
+		}
+		List<Video> allvideo = vdao.findall();
+		List<String> likedid = new ArrayList<>();
+		for(Favorite favorite : fdao.findByUserId(userid)) {
+			likedid.add(favorite.getVideo().getId());
+		}
+		request.setAttribute("list", allvideo);
+		request.setAttribute("likedIds", likedid);
+		request.getRequestDispatcher("/User/CardDetails.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 UserDao udao = new UserDaoImpl();
+		    VideoDao vdao = new VideoDaoImpl();
+		    FavoriteDao fdao = new FavoriteDaoImpl();
+
+		    String path = request.getPathInfo();
+		    String userid = request.getParameter("userid");
+		    String videoid = request.getParameter("id");
+		    String favoriteId = userid + videoid;
+		    Date today = new Date();
+
+		    // LIKE
+		    if ("/like".equals(path)) {
+
+		        Users user = udao.findById(userid);
+		        Video video = vdao.findById(videoid);
+
+		        Favorite f = new Favorite(favoriteId, user, video, today);
+		        fdao.create(f);
+		    }
+
+		    // UNLIKE
+		    else if ("/unlike".equals(path)) {
+		        for (Favorite f : fdao.findByUserId(userid)) {
+		            if (videoid.equals(f.getVideo().getId())) {
+		                fdao.delete(f);
+		                break;
+		            }
+		        }
+		    }
+		    String path2 = request.getServletPath();
+		    if(path2.contains("Share")) {
+	        	response.sendRedirect(request.getContextPath()+"/Share?userid="+userid+"&id="+videoid);
+		    	return;
+	        }
+
+		    if(videoid != null) {
+				request.setAttribute("main", vdao.findById(videoid));
+			}
+		    List<Video> allvideo = vdao.findall();
+			List<String> likedid = new ArrayList<>();
+			for(Favorite favorite : fdao.findByUserId(userid)) {
+				likedid.add(favorite.getVideo().getId());
+			}
+			request.setAttribute("list", allvideo);
+			request.setAttribute("likedIds", likedid);
+
+		    request.setAttribute("userid", userid);
+			request.getRequestDispatcher("/User/CardDetails.jsp").forward(request, response);
+
+	}
+
+}
