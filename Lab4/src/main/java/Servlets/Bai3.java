@@ -19,42 +19,35 @@ import Entity.Favorite;
 import Entity.Users;
 import Entity.Video;
 
-/**
- * Servlet implementation class Bai3
- */
-@WebServlet("/Bai3")
+@WebServlet({"/Bai3","/Bai3/Keyword"})
 public class Bai3 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public Bai3() {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.getRequestDispatcher("/views/Bai3.jsp").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		VideoDao vdao = new VideoDaoImpl();
 		String keyword = request.getParameter("keyword");
-		List list = new ArrayList();
-		for(Video video : vdao.findall()) {
-			if(video.getTitle().contains(keyword)) {
-				list.add(video);
+		String path = request.getServletPath();
+		if(path.contains("Keyword") && keyword != null) {
+			List list = new ArrayList();
+			for(Video video : vdao.findall()) {
+				if(video.getTitle().contains(keyword)) {
+					list.add(video);
+				}
 			}
+			request.setAttribute("list", list);
+		}else {
+			request.setAttribute("mess", "Không tìm thấy title có chứ từ khóa trên");
 		}
-		request.setAttribute("video", list);
+
 		request.getRequestDispatcher("/views/Bai3.jsp").forward(request, response);
 	}
 

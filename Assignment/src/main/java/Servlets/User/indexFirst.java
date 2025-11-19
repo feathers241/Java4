@@ -8,9 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import Dao.CategoryDao;
 import Dao.VideoDao;
+import DaoImpl.CategoryDaoImpl;
 import DaoImpl.VideoDaoImpl;
 import Entity.Video;
 
@@ -32,10 +35,17 @@ public class indexFirst extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		VideoDao vdao = new VideoDaoImpl();
+		CategoryDao cdao = new CategoryDaoImpl();
+		
 		request.setAttribute("list", vdao.findall());
 		String id = request.getParameter("id");
 		HttpSession session = request.getSession();
 		session.setAttribute("id", id);	
+		
+		//Category 
+		request.setAttribute("catlist", cdao.findall());
+		String catselect = request.getParameter("category");
+		
 		
 		//Chuyển trang
 				int count = vdao.findall().size();   // lấy tổng số video
@@ -47,9 +57,18 @@ public class indexFirst extends HttpServlet {
 				if (page < 1) page = 1;
 				if (page > last) page = last;
 
-				List<Video> allvideo = vdao.findVideosByPage(page, 6);
-				request.setAttribute("list", allvideo);
 				request.setAttribute("page", page);
+				List<Video> allvideo = new ArrayList<>();
+				if(catselect!=null) {
+					for(Video v : vdao.findVideosByPage(page, 6)) {
+						if(v.getCategoryId().equals(catselect)) {
+							allvideo.add(v);
+						}
+					}
+				}else {
+					allvideo = vdao.findVideosByPage(page, 6);
+				}
+				request.setAttribute("list", allvideo);
 				
 		request.getRequestDispatcher("/User/indexFirst.jsp").forward(request, response);
 	}

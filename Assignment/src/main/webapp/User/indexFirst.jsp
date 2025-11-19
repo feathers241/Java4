@@ -24,6 +24,7 @@
             background: linear-gradient(135deg, #FFD700 0%, #FFC700 100%);
             padding: 20px 0;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-decoration : none;
         }
 
         .header-container {
@@ -33,6 +34,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
+            text-decoration : none
         }
 
         .logo {
@@ -465,8 +467,16 @@
     <!-- Header -->
     <header>
         <div class="header-container">
-            <div class="logo">Online Entertainment</div>
+            <div class="logo"><a  style ="text-decoration : none" href = "indexFirst">Online Entertainment</a></div>
             <nav>
+                <div class="account-dropdown">
+                    <span class="dropdown-toggle">Thể loại ▼</span>
+                    <div class="dropdown-menu">
+                    	<c:forEach items = "${catlist}" var = "c">
+                    		<a href="${pageContext.request.contextPath}/indexFirst?category=${c.id}">${c.categoryname}</a>
+                    	</c:forEach>
+                    </div>
+                </div>
                 <div class="account-dropdown">
                     <span class="dropdown-toggle">Tài khoản của tôi ▼</span>
                     <div class="dropdown-menu">

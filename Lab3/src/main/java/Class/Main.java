@@ -2,13 +2,13 @@ package Class;
 
 import java.util.List;
 
+import Dao.FavoriteDao;
+import DaoImpl.FavoriteDaoImpl;
 import Entity.Users;
 
 public class Main {
 	public static void main(String[] args) {
-		UserManager um = new UserManager();
-		for(Users user : um.findAll()) {
-			System.out.println(user);
-		}
+		FavoriteDao fdao = new FavoriteDaoImpl();
+
 	}
 }

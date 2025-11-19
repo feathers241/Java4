@@ -62,7 +62,9 @@
 			<nav class="admin-nav">
 				<a href="">Xin chào admin : ${fullname}</a>
 				<a href="VideoManager?adminid=${adminid}">Videos</a>
+				<a href="CategoryManager?adminid=${adminid}">Category</a>
 				<a href="UserManager?adminid=${adminid}">Users</a>
+				<a href="HistoryManager?adminid=${adminid}">History</a>
 				<a href="ReportManager?adminid=${adminid}">Reports</a>
 			</nav>
 		</div>

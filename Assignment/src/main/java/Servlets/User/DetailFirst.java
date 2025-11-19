@@ -33,7 +33,7 @@ public class DetailFirst extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		VideoDao vdao = new VideoDaoImpl();
-		request.setAttribute("list", vdao.findall());
+		request.setAttribute("list", vdao.findVideosByPage(1, 5));
 		
 		
 		String id = request.getParameter("id");
@@ -47,11 +47,7 @@ public class DetailFirst extends HttpServlet {
 		request.getRequestDispatcher("/User/DetailFirst.jsp").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

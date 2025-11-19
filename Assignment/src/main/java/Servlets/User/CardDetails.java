@@ -12,12 +12,15 @@ import java.util.Date;
 import java.util.List;
 
 import Dao.FavoriteDao;
+import Dao.HistoryDao;
 import Dao.UserDao;
 import Dao.VideoDao;
 import DaoImpl.FavoriteDaoImpl;
+import DaoImpl.HistoryDaoImpl;
 import DaoImpl.UserDaoImpl;
 import DaoImpl.VideoDaoImpl;
 import Entity.Favorite;
+import Entity.History;
 import Entity.Users;
 import Entity.Video;
 
@@ -42,12 +45,19 @@ public class CardDetails extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		VideoDao vdao = new VideoDaoImpl();
 		FavoriteDao fdao = new FavoriteDaoImpl();
+		HistoryDao hdao = new HistoryDaoImpl();
+		UserDao udao = new UserDaoImpl();
 
 		String userid = request.getParameter("userid");
 		String id = request.getParameter("id");
 		request.setAttribute("userid", userid);
 		request.setAttribute("id", id);
-
+		
+		
+		//Thêm vào lịch sử
+		Users newuser = udao.findById(userid);
+		Video newvideo = vdao.findById(id);
+		History history = new History(newuser,newvideo);
 
 		if(id != null) {
 			request.setAttribute("main", vdao.findById(id));
@@ -55,7 +65,7 @@ public class CardDetails extends HttpServlet {
 			video.setViews(video.getViews()+1);
 			vdao.update(video);
 		}
-		List<Video> allvideo = vdao.findall();
+		List<Video> allvideo = vdao.findVideosByPage(1,5);
 		List<String> likedid = new ArrayList<>();
 		for(Favorite favorite : fdao.findByUserId(userid)) {
 			likedid.add(favorite.getVideo().getId());

@@ -36,25 +36,20 @@ public class Bai4 extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	ShareDao sdao = new ShareDaoImpl();
-    	List<List<String>> info = new ArrayList<>();
-		for(Object[] object : sdao.shareinfo()) {
-			List<String> temp = new ArrayList<>();
-			String title = object[0].toString();
-			String sharecount = object[1].toString();
-			String firstshare = object[2].toString();
-			String lastshare = object[3].toString();
-			temp.add(title);
-			temp.add(sharecount);
-			temp.add(firstshare);
-			temp.add(lastshare);
-			info.add(temp);
-		}
-		request.setAttribute("shareinfo", info);
+    	FavoriteDao fdao = new FavoriteDaoImpl();
+    	
+    	List<List<Object>> box = new ArrayList<>();
+    	for(Favorite f : fdao.findall()) {
+    		List<Object> item = new ArrayList<>();
+    		item.add(f.getVideo().getTitle());
+    		item.add(f.getUser().getFullname());
+    		item.add(f.getLikeDate());
+    		box.add(item);
+    	}
+    	request.setAttribute("list", box);
 		request.getRequestDispatcher("/views/Bai4.jsp").forward(request, response);
 	}
 

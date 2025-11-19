@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
+<body> 
 <form method = "post">
 	<h3>Form đăng nhập</h3>
 	<label>Nhập vào username hoặc email</label><br>

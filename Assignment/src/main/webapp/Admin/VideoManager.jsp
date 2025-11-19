@@ -44,6 +44,33 @@
   border-bottom: 1px solid #fff;
   font-weight: 700;
 }
+/* Select đẹp */
+.select-box {
+  margin: 10px 0;
+}
+
+.select-box select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid #e6a88a;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  color: #c84b22;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.select-box select:hover {
+  background: #fdf5f0;
+}
+
+.select-box select:focus {
+  outline: none;
+  border-color: #d56c46;
+  box-shadow: 0 0 4px rgba(213, 108, 70, 0.6);
+}
 
 
   .panel{max-width:1200px;margin:0 auto;padding:18px;border-radius:6px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
@@ -74,6 +101,7 @@
     .pager .pgbtn{padding:6px 10px;border-radius:6px;border:1px solid #ccc;background:#e9e9e9;cursor:pointer}
 
     @media (max-width:800px){.editor{grid-template-columns:1fr}.brand{font-size:18px}}
+    
   </style>
 </head>
 <body>
@@ -84,7 +112,9 @@
       <nav class="admin-nav">
         <a href="indexAdmin?adminid=${adminid}">Home</a>
         <a href="#">Videos</a>
+        <a href="CategoryManager?adminid=${adminid}">Category</a>
         <a href="UserManager?adminid=${adminid}">Users</a>
+        <a href="HistoryManager?adminid=${adminid}">History</a>
         <a href="ReportManager?adminid=${adminid}">Reports</a>
       </nav>
     </div>
@@ -114,6 +144,17 @@
               <label><input id="statusActive" name="Status" type="radio" value="true" ${Status ? 'checked' : ''}> Active</label>
               <label><input id="statusInactive" name="Status" type="radio" value="false" ${Status ? '' : 'checked'}> Inactive</label>
             </div>
+            <div class="select-box">
+			    <label for="category">Category</label>
+			    <select id="category" name="catname">
+			        <c:forEach items="${catlist}" var="c">
+			            <option value="${c.id}" ${catedit == c.id ? 'selected' : ''}>
+			                ${c.categoryname}
+			            </option>
+			        </c:forEach>
+			    </select>
+			</div>
+
             <div class="field"><label for="desc">Description?</label><textarea id="desc" name = "Description">${Description}</textarea></div>
 
             <div class="actions-row">

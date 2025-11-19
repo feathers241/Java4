@@ -119,6 +119,7 @@ public class ReportManager extends HttpServlet {
 		if (tab == null) tab = "fav"; // tab mặc định
 		request.setAttribute("tab", tab);
 
+		request.setAttribute("adminid", adminid);
 		request.getRequestDispatcher("/Admin/ReportManager.jsp").forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

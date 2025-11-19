@@ -33,15 +33,12 @@ public class indexAdmin extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserDao udao = new UserDaoImpl();
 		VideoDao vdao = new VideoDaoImpl();
 		FavoriteDao fdao = new FavoriteDaoImpl();
 		//Lấy userid từ Login
-		String adminid = request.getParameter("userid");
+		String adminid = request.getParameter("adminid");
 		
 		//Lấy fullname hiển thị lên trang chủ 
 		Users user = udao.findById(adminid);

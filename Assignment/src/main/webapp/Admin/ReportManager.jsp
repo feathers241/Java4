@@ -41,7 +41,9 @@
       <nav class="admin-nav">
         <a href="indexAdmin?adminid=${adminid}">Home</a>
         <a href="VideoManager?adminid=${adminid}">Videos</a>
+        <a href="CategoryManager?adminid=${adminid}">Category</a>
         <a href="UserManager?adminid=${adminid}">Users</a>
+        <a href="HistoryManager?adminid=${adminid}">History</a>
         <a href="#">Reports</a>
       </nav>
     </div>

@@ -14,9 +14,11 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import Dao.CategoryDao;
 import Dao.FavoriteDao;
 import Dao.UserDao;
 import Dao.VideoDao;
+import DaoImpl.CategoryDaoImpl;
 import DaoImpl.FavoriteDaoImpl;
 import DaoImpl.UserDaoImpl;
 import DaoImpl.VideoDaoImpl;
@@ -37,6 +39,7 @@ public class indexUser extends HttpServlet {
 		VideoDao vdao = new VideoDaoImpl();
 		UserDao udao = new UserDaoImpl();
 		FavoriteDao fdao = new FavoriteDaoImpl();
+		CategoryDao cdao = new CategoryDaoImpl();
 		
 		String id = request.getParameter("id");
 		HttpSession session = request.getSession();
@@ -52,7 +55,7 @@ public class indexUser extends HttpServlet {
 		}
 
 		request.setAttribute("likedIds", likedid);
-		
+		request.setAttribute("catlist", cdao.findall());
 		//Chuyển trang
 		int count = vdao.findall().size();   // lấy tổng số video
 		int last = (int) Math.ceil(count / 6.0); // tính trang cuối đúng
@@ -62,12 +65,20 @@ public class indexUser extends HttpServlet {
 		int page = (pageParam == null) ? 1 : Integer.parseInt(pageParam);
 		if (page < 1) page = 1;
 		if (page > last) page = last;
-
-		List<Video> allvideo = vdao.findVideosByPage(page, 6);
-		request.setAttribute("list", allvideo);
 		request.setAttribute("page", page);
-
 		
+		String catselect = request.getParameter("category");
+		List<Video> allvideo = new ArrayList<>();
+		if(catselect!=null) {
+			for(Video v : vdao.findVideosByPage(page, 6)) {
+				if(v.getCategoryId().equals(catselect)) {
+					allvideo.add(v);
+				}
+			}
+		}else {
+			allvideo = vdao.findVideosByPage(page, 6);
+		}
+		request.setAttribute("list", allvideo);
 		request.getRequestDispatcher("/User/index.jsp").forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

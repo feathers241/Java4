@@ -6,10 +6,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import Dao.CategoryDao;
 import Dao.VideoDao;
+import DaoImpl.CategoryDaoImpl;
 import DaoImpl.VideoDaoImpl;
+import Entity.Category;
 import Entity.Video;
 
 /**
@@ -29,15 +33,19 @@ public class VideoManager extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		VideoDao vdao = new VideoDaoImpl();
+		CategoryDao cdao = new CategoryDaoImpl();
+		
 		// Lấy adminid từ indexAdmin
 		String adminid = request.getParameter("adminid");
+		request.setAttribute("adminid", adminid);
+		
+		//Category 
+		request.setAttribute("catlist", cdao.findall());
 		
 		//Video List
 		request.setAttribute("VideoTotal", vdao.findall().size());
-//		request.setAttribute("VideoList", vdao.findall());
 		
 		//Video Editor
-		
 		/// Hiển thị info video sau khi nhấn vào edit tronng video List
 		String videoid = request.getParameter("videoid");
 		if(videoid != null) {
@@ -48,6 +56,7 @@ public class VideoManager extends HttpServlet {
 			request.setAttribute("Status", video.isActive());
 			request.setAttribute("Description", video.getDescription());
 			request.setAttribute("VideoPoster", video.getPoster());
+			request.setAttribute("catedit", video.getCategoryId());
 		}
 				//Chuyển trang
 				int count = vdao.findall().size();   // lấy tổng số video
@@ -73,10 +82,14 @@ public class VideoManager extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		VideoDao vdao = new VideoDaoImpl();
+		CategoryDao cdao = new CategoryDaoImpl();
 		
 		//Video List
 		request.setAttribute("VideoTotal", vdao.findall().size());
 		request.setAttribute("VideoList", vdao.findall());
+		
+		//Category list
+		request.setAttribute("catlist", cdao.findall());
 		
 		/// Hiển thị info video sau khi nhấn vào edit tronng video List
 		String videoid = request.getParameter("Youtubeid");
@@ -92,11 +105,13 @@ public class VideoManager extends HttpServlet {
 		if(poster==null) {
 			poster = hiddenposter;
 		}
+		// Category 
+		String Categoryid = request.getParameter("catname");
 		
 		//Path
 		String path = request.getServletPath();
 		
-		Video video = new Video(videoid,VideoTitle,poster,ViewCount,Description,Status);
+		Video video = new Video(videoid,VideoTitle,poster,ViewCount,Description,Status,Categoryid);
 			//Create
 			if(path.contains("Create")) {
 				vdao.create(video);

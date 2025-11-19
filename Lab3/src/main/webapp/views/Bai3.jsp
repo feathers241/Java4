@@ -6,14 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-</head>
+</head> 
 <body>
 	<form method = "post">
 		<label>Nhập vào id người dùng :</label><br>
 		<input name = "id"><br>
 		<button>Tìm kiếm</button>
 	</form>
-			<tr><h3>${mess}</h3></tr>
+	<h4>${mess}</h4>
 	<table border = "1" cellspacing = "5" cellpadding = "3">
 		<c:forEach items = "${list}" var = "a">
 			<tr>

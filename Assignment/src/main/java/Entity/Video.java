@@ -15,14 +15,16 @@ public class Video {
     private int views;
     private String description;
     private boolean active;
+    private String CategoryId;
 
-    public Video(String id, String title, String poster, int views, String description, boolean active) {
+    public Video(String id, String title, String poster, int views, String description, boolean active , String e) {
         this.id = id;
         this.title = title;
         this.poster = poster;
         this.views = views;
         this.description = description;
         this.active = active;
+        this.CategoryId = e;
     }
 
     public Video() {}
@@ -47,6 +49,10 @@ public class Video {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+    
+    public String getCategoryId() {return CategoryId;}
+    public void setCategoryId(String a) {this.CategoryId = a;}
+    
 
     @Override
     public String toString() {

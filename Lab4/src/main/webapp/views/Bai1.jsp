@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-</head>
+</head> 
 <body>
 	<c:url value = "${pagecontext.requets.contextPath}/Bai1" var = "url"/>
 	<form method = "post">

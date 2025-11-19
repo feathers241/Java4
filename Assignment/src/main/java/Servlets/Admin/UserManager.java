@@ -28,7 +28,7 @@ public class UserManager extends HttpServlet {
 		UserDao udao = new UserDaoImpl();
 		// Lấy adminid từ indexAdmin
 		String adminid = request.getParameter("adminid");
-		
+		request.setAttribute("adminid", adminid);
 		//Số lượng User
 		request.setAttribute("UserTotal", udao.findall().size());
 		

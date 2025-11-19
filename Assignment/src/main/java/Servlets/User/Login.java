@@ -47,7 +47,7 @@ public class Login extends HttpServlet {
 			}
 			if(password.equals(user.getPassword())) {
 				if(user.isAdmin()) {
-					response.sendRedirect(request.getContextPath() + "/indexAdmin?userid="+user.getId());
+					response.sendRedirect(request.getContextPath() + "/indexAdmin?adminid="+user.getId());
 					return;
 				}else {
 					response.sendRedirect(request.getContextPath() + "/indexUser?userid="+user.getId());

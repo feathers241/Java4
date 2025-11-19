@@ -487,6 +487,14 @@
             	<a href = "">${mess}</a>
                 <a href="${pageContext.request.contextPath}/MyFavorites?userid=${userid}">Mục ưu thích</a>
                 <div class="account-dropdown">
+                    <span class="dropdown-toggle">Thể loại ▼</span>
+                    <div class="dropdown-menu">
+                    	<c:forEach items = "${catlist}" var = "c">
+                    		<a href="${pageContext.request.contextPath}/indexUser?category=${c.id}">${c.categoryname}</a>
+                    	</c:forEach>
+                    </div>
+                </div>
+                <div class="account-dropdown">
                     <span class="dropdown-toggle">Tài khoản của tôi ▼</span>
                     <div class="dropdown-menu">
                         <a href="indexFirst">Đăng xuất</a>
