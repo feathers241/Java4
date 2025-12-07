@@ -1,0 +1,115 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+ <meta charset="utf-8"> 
+ <title>Employee Management - REST Consumer</title> 
+</head> 
+<body> 
+ <div> 
+  <input id="id" placeholder="Id?"><br>  
+  <input id="name" placeholder="Name?"><br>  
+  <input type="radio" id="male" name="gender" checked> Male  
+  <input type="radio" id="female" name="gender"> Female<br>  
+  <input id="salary" placeholder="Salary?"> 
+  <hr> 
+  <button onclick="ctrl.create()">Create</button> 
+  <button onclick="ctrl.update()">Update</button> 
+  <button onclick="ctrl.delete()">Delete</button> 
+  <button onclick="ctrl.reset()">Reset</button> 
+ </div> 
+ <hr> 
+ <table border="1" style="width: 100%"> 
+ <thead> 
+  <tr> 
+<th>Id</th> 
+<th>Name</th> 
+<th>Gender</th> 
+<th>Salary</th> 
+<th></th> 
+</tr> 
+ </thead> 
+ <tbody id="list"></tbody> 
+ </table> 
+ <script> 
+ var ctrl = {
+		 setForm(emp){
+		    document.getElementById("id").value = emp.id;
+		    document.getElementById("name").value = emp.name;
+		    document.getElementById("salary").value = emp.salary;
+		    document.getElementById(emp.gender ? "male":"female").checked = true;
+		 },
+
+		 getForm(){
+		    return {
+		        id: document.getElementById("id").value,
+		        name: document.getElementById("name").value,
+		        gender: document.getElementById("male").checked,
+		        salary: parseFloat(document.getElementById("salary").value)
+		    }
+		 },
+
+		 fillToTable(list){
+		    let rows = [];
+		    list.forEach(e => {
+		        rows.push(`<tr>
+		            <td>${e.id}</td>
+		            <td>${e.name}</td>
+		            <td>${e.gender?'Male':'Female'}</td>
+		            <td>${e.salary}</td>
+		            <td><a href="javascript:ctrl.edit('${e.id}')">Edit</a></td>
+		        </tr>`)
+		    });
+		    document.getElementById("list").innerHTML = rows.join("");
+		 },
+
+		 loadAll(){
+		    fetch("http://localhost:8080/J3/employees")
+		    .then(r=>r.json())
+		    .then(d=>this.fillToTable(d))
+		 },
+
+		 create(){
+		    fetch("http://localhost:8080/J3/employees",{
+		        method:"POST",
+		        headers:{ "Content-Type":"application/json" },
+		        body: JSON.stringify(this.getForm())
+		    }).then(()=>{
+		        this.loadAll();
+		        this.reset();
+		    })
+		 },
+
+		 update(){
+		    let e = this.getForm();
+		    fetch(`http://localhost:8080/J3/employees/${e.id}`,{
+		        method:"PUT",
+		        headers:{ "Content-Type":"application/json" },
+		        body: JSON.stringify(e)
+		    }).then(()=>this.loadAll())
+		 },
+
+		 delete(){
+		    let id = document.getElementById("id").value;
+		    fetch(`http://localhost:8080/J3/employees/${id}`,{
+		        method:"DELETE"
+		    }).then(()=>{
+		        this.loadAll();
+		        this.reset();
+		    })
+		 },
+
+		 edit(id){
+		    fetch(`http://localhost:8080/J3/employees/${id}`)
+		    .then(r=>r.json())
+		    .then(e=>this.setForm(e))
+		 },
+
+		 reset(){
+		    this.setForm({id:"",name:"",gender:true,salary:0})
+		 }
+		}
+		ctrl.loadAll();
+
+ </script> 
+</body> 
+</html> 

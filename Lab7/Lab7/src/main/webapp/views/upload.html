@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+		<input type="file" id="file">
+	<button onclick="upload()">Upload</button>
+	
+	<script>
+	function upload(){
+	    let form = new FormData();
+	    form.append("file", document.getElementById("file").files[0]);
+	
+	    fetch("http://localhost:8080/Lab7/UploadServlet", {
+	        method:"POST",
+	        body: form
+	    })
+	    .then(res => res.json())
+	    .then(json => console.log(json))
+	}
+	</script>
+	
+</body>
+</html>
