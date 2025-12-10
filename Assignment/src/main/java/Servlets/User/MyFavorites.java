@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +25,7 @@ import Entity.Video;
 /**
  * Servlet implementation class MyFavorites
  */
-@WebServlet({"/MyFavorites/*","/MyFavorites/Share"})
+@WebServlet({"/MyFavorites","/MyFavorites/*","/MyFavorites/Share"})
 public class MyFavorites extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -35,13 +37,19 @@ public class MyFavorites extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		FavoriteDao fdao = new FavoriteDaoImpl();
-		String id = request.getParameter("userid");
-		List<Video> temp = new ArrayList<>();
-		for(Favorite favo : fdao.findByUserId(id)) {
-			temp.add(favo.getVideo());
+		HttpSession session = request.getSession();
+		
+		Users user = (Users) session.getAttribute("user");
+		if(user!=null) {
+			String id = user.getId();
+			List<Video> temp = new ArrayList<>();
+			for(Favorite favo : fdao.findByUserId(id)) {
+				temp.add(favo.getVideo());
+			}
+			request.setAttribute("list", temp);
+			request.setAttribute("userid",id);
 		}
-		request.setAttribute("list", temp);
-		request.setAttribute("userid",id);
+
 		request.getRequestDispatcher("/User/MyFavorite.jsp").forward(request, response);
 	}
 

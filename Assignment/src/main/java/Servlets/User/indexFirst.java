@@ -15,6 +15,7 @@ import Dao.CategoryDao;
 import Dao.VideoDao;
 import DaoImpl.CategoryDaoImpl;
 import DaoImpl.VideoDaoImpl;
+import Entity.Users;
 import Entity.Video;
 
 /**
@@ -41,6 +42,8 @@ public class indexFirst extends HttpServlet {
 		String id = request.getParameter("id");
 		HttpSession session = request.getSession();
 		session.setAttribute("id", id);	
+		
+		Users user = (Users) session.getAttribute("user"); 
 		
 		//Category 
 		request.setAttribute("catlist", cdao.findall());

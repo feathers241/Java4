@@ -25,12 +25,14 @@ import Entity.Users;
 import Entity.Video;
 
 public class Main {
-	public static void main(String[] args) {
-		HistoryDao hdao = new HistoryDaoImpl();
-		UserDao udao = new UserDaoImpl();
-		VideoDao vdao = new VideoDaoImpl();
-		
-		int a = 0;
-		System.out.print(a);
-	}
+    public static void main(String[] args) {
+        String s = "askfdhasdf";
+        for(int i = 0 ; i < s.length(); i++) {
+        	for(int j = 0; j < 3; j++) {
+        		System.out.println(s.charAt(j));
+        	}
+        }
+
+    }
 }
+

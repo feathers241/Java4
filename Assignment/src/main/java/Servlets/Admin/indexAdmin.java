@@ -25,12 +25,8 @@ import Entity.Video;
 public class indexAdmin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public indexAdmin() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,7 +34,8 @@ public class indexAdmin extends HttpServlet {
 		VideoDao vdao = new VideoDaoImpl();
 		FavoriteDao fdao = new FavoriteDaoImpl();
 		//Lấy userid từ Login
-		String adminid = request.getParameter("adminid");
+//		String adminid = request.getParameter("adminid");
+		String adminid = "admin02";
 		
 		//Lấy fullname hiển thị lên trang chủ 
 		Users user = udao.findById(adminid);

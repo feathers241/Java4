@@ -15,7 +15,7 @@ import DaoImpl.UserDaoImpl;
 import DaoImpl.VideoDaoImpl;
 import Entity.Users;
 
-@WebServlet({"/Login/*"})
+@WebServlet({"/Login"})
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -31,29 +31,34 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserDao dao = new UserDaoImpl();
 		String id = request.getParameter("id");
-
+		HttpSession session = request.getSession();
+		
 		if(id != null) {
 			try {
-			String password = request.getParameter("password");
-			Users user = dao.findidemail(id);
-			if(user == null) {
-				request.setAttribute("mess", "Không tìm thấy username hoặc email hợp lệ");
-			}
-			if(password == null) {
-				request.setAttribute("mess", "Vui lòng nhập mật khẩu !");
-			}
-			if(!password.equals(user.getPassword())) {
-				request.setAttribute("mess", "Mật khẩu không đúng");
-			}
-			if(password.equals(user.getPassword())) {
-				if(user.isAdmin()) {
-					response.sendRedirect(request.getContextPath() + "/indexAdmin?adminid="+user.getId());
-					return;
-				}else {
-					response.sendRedirect(request.getContextPath() + "/indexUser?userid="+user.getId());
-					return;
+				String password = request.getParameter("password");
+				Users user = dao.findidemail(id);
+				if(user == null) {
+					request.setAttribute("mess", "Không tìm thấy username hoặc email hợp lệ");
 				}
-			}
+					if(password == null) {
+					request.setAttribute("mess", "Vui lòng nhập mật khẩu !");
+				}
+				if(!password.equals(user.getPassword())) {
+					request.setAttribute("mess", "Mật khẩu không đúng");
+				}
+				if(password.equals(user.getPassword())) {
+					if(user.isAdmin()) {
+						response.sendRedirect(request.getContextPath() + "/indexAdmin?adminid="+user.getId());
+						return;
+					}else {
+						request.getSession().setAttribute("user", user);
+						String secureURL = (String) session.getAttribute("secureURL");
+						if(secureURL!=null) {
+							response.sendRedirect(secureURL);
+							return;
+						}
+					}
+				}
 			}catch(Exception e) {
 				request.setAttribute("mess", "Không được để trống thông tin");
 			}

@@ -33,8 +33,8 @@ public class EditProfile extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserDao dao = new UserDaoImpl();
-		String iduser = request.getParameter("iduser");
-		Users user = dao.findById(iduser);
+		HttpSession session = request.getSession();
+		Users user = (Users) session.getAttribute("user");
 		request.setAttribute("fullname",user.getFullname());
 		request.setAttribute("email", user.getEmail());
 		request.getRequestDispatcher("/User/EditProfile.jsp").forward(request, response);

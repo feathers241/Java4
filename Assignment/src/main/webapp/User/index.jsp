@@ -480,24 +480,26 @@
 <body>
 	<c:url value = "${pagecontext.request.ContextPath}/indexUser" var = "url"/>
     <!-- Header -->
+    <form method = "post">
     <header>
+
         <div class="header-container">
-            <div class="logo">Online Entertainment</div>
+            <div class="logo"><a  style ="text-decoration : none" href = "indexUser">Online Entertainment</a></div>
             <nav>
             	<a href = "">${mess}</a>
-                <a href="${pageContext.request.contextPath}/MyFavorites?userid=${userid}">Mục ưu thích</a>
+                <a href="${pageContext.request.contextPath}/MyFavorites">Mục ưu thích</a>
                 <div class="account-dropdown">
                     <span class="dropdown-toggle">Thể loại ▼</span>
                     <div class="dropdown-menu">
                     	<c:forEach items = "${catlist}" var = "c">
-                    		<a href="${pageContext.request.contextPath}/indexUser?category=${c.id}">${c.categoryname}</a>
+                    		<a href="${pageContext.request.contextPath}/indexUser?userid=${userid}&category=${c.id}">${c.categoryname}</a>
                     	</c:forEach>
                     </div>
                 </div>
                 <div class="account-dropdown">
                     <span class="dropdown-toggle">Tài khoản của tôi ▼</span>
                     <div class="dropdown-menu">
-                        <a href="indexFirst">Đăng xuất</a>
+                        <a href="Login">Đăng xuất</a>
                         <a href="ChangePassword?iduser=${userid}">Đổi mật khẩu</a>
                         <a href="EditProfile?iduser=${userid}">Chỉnh sửa thông tin</a>
                     </div>
@@ -520,7 +522,6 @@
         <section class="content-section">
             <h2 class="section-title">Featured Content</h2>
             <div class="carousel-container">
-            <form method = "post">
                 <div class="content-grid">
                 	<c:forEach items = "${list}" var = "a">
                 		<div class="video-card-wrapper">

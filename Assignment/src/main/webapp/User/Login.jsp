@@ -48,7 +48,7 @@
     <div class="header-container">
       <div class="logo">Online Entertainment</div>
       <nav>
-        <a href="indexFirst">Home</a>
+        <a href="indexUser">Home</a>
       </nav>
     </div>
   </header>

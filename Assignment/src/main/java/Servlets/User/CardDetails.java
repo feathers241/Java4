@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,31 +48,36 @@ public class CardDetails extends HttpServlet {
 		FavoriteDao fdao = new FavoriteDaoImpl();
 		HistoryDao hdao = new HistoryDaoImpl();
 		UserDao udao = new UserDaoImpl();
-
-		String userid = request.getParameter("userid");
+		HttpSession session = request.getSession();
+		Users user = (Users) session.getAttribute("user");
+		List<Video> allvideo = vdao.findVideosByPage(1,5);
+		request.setAttribute("list", allvideo);
 		String id = request.getParameter("id");
-		request.setAttribute("userid", userid);
 		request.setAttribute("id", id);
-		
-		
-		//Thêm vào lịch sử
-		Users newuser = udao.findById(userid);
-		Video newvideo = vdao.findById(id);
-		History history = new History(newuser,newvideo);
-
 		if(id != null) {
 			request.setAttribute("main", vdao.findById(id));
 			Video video = vdao.findById(id);
 			video.setViews(video.getViews()+1);
 			vdao.update(video);
 		}
-		List<Video> allvideo = vdao.findVideosByPage(1,5);
-		List<String> likedid = new ArrayList<>();
-		for(Favorite favorite : fdao.findByUserId(userid)) {
-			likedid.add(favorite.getVideo().getId());
+		if(user != null) {
+			String userid = user.getId();
+
+			request.setAttribute("userid", userid);
+			
+			//Thêm vào lịch sử
+			Users newuser = udao.findById(userid);
+			Video newvideo = vdao.findById(id);
+			History history = new History(newuser,newvideo);
+
+			List<String> likedid = new ArrayList<>();
+			for(Favorite favorite : fdao.findByUserId(userid)) {
+				likedid.add(favorite.getVideo().getId());
+			}
+
+			request.setAttribute("likedIds", likedid);
 		}
-		request.setAttribute("list", allvideo);
-		request.setAttribute("likedIds", likedid);
+		
 		request.getRequestDispatcher("/User/CardDetails.jsp").forward(request, response);
 	}
 

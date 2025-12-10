@@ -44,18 +44,26 @@ public class indexUser extends HttpServlet {
 		String id = request.getParameter("id");
 		HttpSession session = request.getSession();
 		session.setAttribute("id", id);	
-		String userid = request.getParameter("userid");
-		Users user = udao.findById(userid);
-		request.setAttribute("mess","Xin chào : "+user.getFullname());
-		request.setAttribute("userid", userid);
+		
+		//Lấy user từ Login
+		Users user = (Users) session.getAttribute("user");
+		if(user != null) {
+			String userid = user.getId();
+			
+			request.setAttribute("mess","Xin chào : "+user.getFullname());
+			request.setAttribute("userid", userid);
 
-		List<String> likedid = new ArrayList<>();
-		for(Favorite favorite : fdao.findByUserId(userid)) {
-			likedid.add(favorite.getVideo().getId());
+			List<String> likedid = new ArrayList<>();
+			for(Favorite favorite : fdao.findByUserId(userid)) {
+				likedid.add(favorite.getVideo().getId());
+			}
+			request.setAttribute("likedIds", likedid);
 		}
+		
 
-		request.setAttribute("likedIds", likedid);
 		request.setAttribute("catlist", cdao.findall());
+		String catselect = request.getParameter("category");
+		
 		//Chuyển trang
 		int count = vdao.findall().size();   // lấy tổng số video
 		int last = (int) Math.ceil(count / 6.0); // tính trang cuối đúng
@@ -67,7 +75,7 @@ public class indexUser extends HttpServlet {
 		if (page > last) page = last;
 		request.setAttribute("page", page);
 		
-		String catselect = request.getParameter("category");
+
 		List<Video> allvideo = new ArrayList<>();
 		if(catselect!=null) {
 			for(Video v : vdao.findVideosByPage(page, 6)) {
@@ -87,37 +95,52 @@ public class indexUser extends HttpServlet {
 	    UserDao udao = new UserDaoImpl();
 	    VideoDao vdao = new VideoDaoImpl();
 	    FavoriteDao fdao = new FavoriteDaoImpl();
-
+	    HttpSession session = request.getSession();
+	    
 	    String path = request.getServletPath();
-	    String userid = request.getParameter("userid");
-	    String videoid = request.getParameter("id");
-	    String favoriteId = userid + videoid;
-	    Date today = new Date();
+	    
+	    Users UserTemp = (Users) session.getAttribute("user");
+	    
+	    if(UserTemp != null) {
+	    	String userid = UserTemp.getId();
+		    String videoid = request.getParameter("id");
+		    String favoriteId = userid + videoid;
+		    Date today = new Date();
 
-	    // LIKE
-	    if (path.equals("/indexUser/like")) {
+		    // LIKE
+		    if (path.equals("/indexUser/like")) {
 
-	        Users user = udao.findById(userid);
-	        Video video = vdao.findById(videoid);
+		        Users user = udao.findById(userid);
+		        Video video = vdao.findById(videoid);
 
-	        Favorite f = new Favorite(favoriteId, user, video, today);
-	        fdao.create(f);
-	    }
+		        Favorite f = new Favorite(favoriteId, user, video, today);
+		        fdao.create(f);
+		    }
 
-	    // UNLIKE
-	    else if (path.equals("/indexUser/unlike")) {
+		    // UNLIKE
+		    else if (path.equals("/indexUser/unlike")) {
 
-	        for (Favorite f : fdao.findByUserId(userid)) {
-	            if (videoid.equals(f.getVideo().getId())) {
-	                fdao.delete(f);
-	                break;
-	            }
-	        }
-	    }
-	    if (path.equals("/indexUser/Share")) {
-	    	response.sendRedirect(request.getContextPath()+"/Share?userid="+userid+"&id="+videoid);
-	    	return;
-	    }
+		        for (Favorite f : fdao.findByUserId(userid)) {
+		            if (videoid.equals(f.getVideo().getId())) {
+		                fdao.delete(f);
+		                break;
+		            }
+		        }
+		    }
+		    if (path.equals("/indexUser/Share")) {
+		    	response.sendRedirect(request.getContextPath()+"/Share?userid="+userid+"&id="+videoid);
+		    	return;
+		    }
+		    if (path.equals("/indexUser/MyFavorites")) {
+		    	response.sendRedirect(request.getContextPath()+"/MyFavorites");
+		    	return;
+		    }
+		    if (path.equals("/indexUser/Login")) {
+		    	session.setAttribute("user", null);
+		    	response.sendRedirect(request.getContextPath()+"/indexUser");
+		    	return;
+		    }
+	    
 
 	    // 🔥 MUST HAVE: Load lại dữ liệu như doGet()
 	    List<Video> allvideo = vdao.findall();
@@ -133,6 +156,7 @@ public class indexUser extends HttpServlet {
 	    request.setAttribute("userid", userid);
 	    request.setAttribute("list", allvideo);
 	    request.setAttribute("likedIds", likedid);
+	    }
 
 	    request.getRequestDispatcher("/User/index.jsp").forward(request, response);
 	}

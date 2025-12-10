@@ -21,7 +21,7 @@
   </style>
 </head>
 <body>
-  <header><div class="header-container"><div class="logo">Online Entertainment</div><a href="indexFirst">Home</a></div></header>
+  <header><div class="header-container"><div class="logo">Online Entertainment</div><a href="indexUser">Home</a></div></header>
   <div class="container">
     <div class="box">
       <h2>Registration</h2>
